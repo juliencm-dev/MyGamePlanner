@@ -1,0 +1,1 @@
+ALTER TABLE "groupEventsConfirmation" ADD COLUMN "confirmation" integer DEFAULT 0 NOT NULL;

@@ -1,0 +1,1 @@
+ALTER TABLE "groupEventsConfirmation" DROP COLUMN IF EXISTS "confirmation";

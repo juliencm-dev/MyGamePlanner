@@ -1,0 +1,1 @@
+ALTER TABLE "user" ADD COLUMN "memberSince" timestamp NOT NULL;
