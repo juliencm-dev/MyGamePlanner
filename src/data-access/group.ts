@@ -1,11 +1,11 @@
 import "server-only";
 
-import { and, eq } from "drizzle-orm";
+import { auth } from "@/auth";
 import { db } from "@/db/db";
+
+import { and, eq } from "drizzle-orm";
 import {
   Group,
-  GroupMemberWithRelations,
-  InviteToken,
   groupInviteTokens,
   groupMembers,
   groups,
@@ -18,65 +18,19 @@ import {
   GroupMemberDto,
   UpdateMemberDto,
 } from "@/use-case/groups/types";
-import { auth } from "@/auth";
 import {
   removeAttendanceByGroupAndUserId,
   updateAttendanceByGroupId,
-} from "./events";
-import {
-  removeUserFavoriteGroupByUserId,
-  toUserAvailabilityDtoMapper,
-} from "./user";
+} from "@/data-access/events";
+import { removeUserFavoriteGroupByUserId } from "@/data-access/user";
 import { cache } from "react";
+import {
+  toGroupDtoMapper,
+  toGroupMapper,
+  toGroupMemberDtoMapper,
+  tokenMapper,
+} from "@/data-access/dto-mapper/group";
 
-export function tokenMapper(inviteToken: InviteToken) {
-  return {
-    expires: inviteToken.expires,
-    token: inviteToken.token,
-  } as GroupInviteTokenDto;
-}
-
-export function toGroupDtoMapper(
-  groups: Group[],
-  isFavourite?: boolean[]
-): GroupDto[] {
-  return groups.map((group, idx) => {
-    return {
-      id: group.id,
-      name: group.name,
-      description: group.description,
-      image: group.image,
-      isFavourite: isFavourite?.[idx] ?? false,
-      ownerId: group.ownerId,
-    } as GroupDto;
-  });
-}
-
-export function toGroupMemberDtoMapper(
-  groupMembers: GroupMemberWithRelations[]
-): GroupMemberDto[] {
-  return groupMembers.map((member) => {
-    return {
-      name: member.user.name,
-      role: member.role,
-      image: member.user.image,
-      id: member.userId,
-      groupId: member.groupId,
-      availability: toUserAvailabilityDtoMapper(member.user.availability || []),
-      absences: member.user.absences || [],
-    } as GroupMemberDto;
-  });
-}
-
-export function toGroupMapper(group: GroupDto): Group {
-  return {
-    id: group.id,
-    name: group.name,
-    description: group.description,
-    image: group.image,
-    ownerId: group.ownerId,
-  } as Group;
-}
 export async function createGroup(newGroup: GroupDto) {
   const group = toGroupMapper(newGroup);
 
@@ -143,7 +97,7 @@ export async function updateMemberRole(member: UpdateMemberDto) {
     );
 }
 
-export async function getUserGroups(): Promise<GroupDto[]> {
+export const getUserGroups = cache(async (): Promise<GroupDto[]> => {
   const { getUser } = await auth();
   const user = getUser();
 
@@ -183,7 +137,7 @@ export async function getUserGroups(): Promise<GroupDto[]> {
   );
 
   return toGroupDtoMapper(foundGroups as unknown as Group[], isFavourited);
-}
+});
 
 export const getGroupMembers = cache(
   async (groupId: string): Promise<GroupMemberDto[]> => {

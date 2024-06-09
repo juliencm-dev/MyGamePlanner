@@ -11,52 +11,12 @@ import {
 import { GameDto, RatingDto } from "@/use-case/games/types";
 import { getImageFromBucket } from "@/db/s3";
 import { cache } from "react";
-
-export function toGameDtoMapper(games: Game[]): GameDto[] {
-  return games.map((game) => {
-    return {
-      id: game.id,
-      name: game.name,
-      groupId: game.groupId,
-      minPlayers: game.minPlayers,
-      maxPlayers: game.maxPlayers,
-      description: game.description,
-      image: game.image,
-      addedBy: game.addedBy,
-    } as GameDto;
-  });
-}
-
-export function toGameMapper(game: GameDto): Game {
-  return {
-    id: game.id,
-    name: game.name,
-    groupId: game.groupId,
-    minPlayers: game.minPlayers,
-    maxPlayers: game.maxPlayers,
-    description: game.description,
-    image: game.image,
-    addedBy: game.addedBy,
-  } as Game;
-}
-
-export function toGameRatingDtoMapper(ratings: GameRating[]): RatingDto[] {
-  return ratings.map((rating) => {
-    return {
-      gameId: rating.gameId,
-      userId: rating.userId,
-      rating: rating.rating,
-    } as RatingDto;
-  });
-}
-
-export function toGameRatingMapper(rating: RatingDto): GameRating {
-  return {
-    gameId: rating.gameId,
-    userId: rating.userId,
-    rating: rating.rating,
-  } as GameRating;
-}
+import {
+  toGameDtoMapper,
+  toGameMapper,
+  toGameRatingDtoMapper,
+  toGameRatingMapper,
+} from "@/data-access/dto-mapper/games";
 
 export async function createGame({ newGame }: { newGame: GameDto }) {
   const game = toGameMapper(newGame);

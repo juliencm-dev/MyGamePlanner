@@ -7,73 +7,20 @@ import {
   EventConfirmation,
   EventWithRelations,
   GroupMember,
-  groupAvailableGames,
   groupEvents,
   groupEventsConfirmation,
 } from "@/db/schema";
-import {
-  EventDto,
-  EventConfirmationDto,
-  Attendance,
-} from "@/use-case/events/types";
-import { getUserGroups } from "./group";
+import { EventDto, EventConfirmationDto } from "@/use-case/events/types";
+import { getUserGroups } from "@/data-access/group";
 import { GroupDto } from "@/use-case/groups/types";
 import { auth } from "@/auth";
-import { group } from "console";
 import { cache } from "react";
-
-export function toEventDtoMapper(events: EventWithRelations[]): EventDto[] {
-  return events.map((event) => {
-    return {
-      id: event.id,
-      name: event.name,
-      description: event.description,
-      groupId: event.groupId,
-      gameName: event.game.name,
-      startDate: event.startDate,
-      endDate: event.endDate,
-      mandatoryPlayer: event.mandatoryPlayer || null,
-      confirmations: toEventConfirmationDtoMapper(event.confirmations),
-    } as EventDto;
-  });
-}
-
-export function toEventMapper(event: EventDto): Event {
-  return {
-    id: event.id,
-    name: event.name,
-    description: event.description,
-    groupId: event.groupId,
-    game: event.gameId,
-    startDate: event.startDate,
-    endDate: event.endDate,
-    mandatoryPlayer: event.mandatoryPlayer || null,
-  } as Event;
-}
-
-export function toEventConfirmationDtoMapper(
-  eventConfirmations: EventConfirmation[]
-): EventConfirmationDto[] {
-  return eventConfirmations.map((confirmation) => {
-    return {
-      userId: confirmation.userId,
-      eventId: confirmation.eventId,
-      attending: confirmation.confirmed as Attendance,
-    } as EventConfirmationDto;
-  });
-}
-
-export function toEventConfirmationMapper(
-  eventConfirmation: EventConfirmationDto,
-  eventId: string
-): EventConfirmation {
-  return {
-    userId: eventConfirmation.userId,
-    eventId: eventId,
-    confirmed:
-      (eventConfirmation.attending?.valueOf() as number) || Attendance.PENDING,
-  } as EventConfirmation;
-}
+import {
+  toEventConfirmationDtoMapper,
+  toEventConfirmationMapper,
+  toEventDtoMapper,
+  toEventMapper,
+} from "@/data-access/dto-mapper/events";
 
 export async function createEvent({
   newEvent,
