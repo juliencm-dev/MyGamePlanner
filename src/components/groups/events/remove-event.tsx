@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTransition } from "react";
 import { PulseLoader } from "react-spinners";
-import { toast } from "sonner";
 import { removeEventAction } from "@/app/(protected)/groups/[groupId]/_actions/remove-event";
+import { useToast } from "@/components/ui/use-toast";
 
 export function RemoveEvent({
   eventId,
@@ -17,19 +17,21 @@ export function RemoveEvent({
   setSelectedEventName: (name: string) => void;
 }) {
   const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
 
   function handleRemoveEvent(formData: FormData) {
     startTransition(async () => {
       await removeEventAction(formData).then((res) => {
-        if (res) {
-          toast("Success", {
+        if (res.status === 200) {
+          toast({
+            title: "Success",
             description: res.message,
           });
-          setSelectedEventId("");
-          setSelectedEventName("");
         } else {
-          toast.error("Error", {
-            description: "Could not remove event from group",
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: res.message,
           });
         }
       });

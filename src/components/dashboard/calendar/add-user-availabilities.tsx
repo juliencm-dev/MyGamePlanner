@@ -10,18 +10,21 @@ import { generateAvailabilities } from "@/lib/availabilities/utils";
 import { type UserAvailabilityDto } from "@/use-case/users/types";
 import { useState, useTransition } from "react";
 import { PulseLoader } from "react-spinners";
-import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
 
 export function AddUserAvailabilities() {
   const [range, setRange] = useState<TimePickerRange | undefined>(undefined);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const { toast } = useToast();
 
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
 
   function handleAddAvailabilities() {
     if (!range || selectedDays.length === 0) {
-      toast.error("Error", {
+      toast({
+        variant: "destructive",
+        title: "Error",
         description:
           "At least one day along with a start and end time are required",
       });
@@ -36,15 +39,24 @@ export function AddUserAvailabilities() {
         );
 
         await addUserAvailabilitiesAction({ availabilities }).then((res) => {
-          if (res) {
-            toast("Success", {
+          if (res.status === 200) {
+            toast({
+              title: "Success",
               description: res.message,
             });
             setOpen(false);
+          } else {
+            toast({
+              variant: "destructive",
+              title: "Error",
+              description: res.message,
+            });
           }
         });
       } catch (error) {
-        toast.error("Error", {
+        toast({
+          variant: "destructive",
+          title: "Error",
           description: "Something went wrong, please try again",
         });
       }

@@ -15,15 +15,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { type GroupMemberDto } from "@/use-case/groups/types";
 import { useTransition } from "react";
-import { toast } from "sonner";
 import { removeMemberAction } from "@/app/(protected)/groups/[groupId]/_actions/remove-member";
 import { ServerResponseMessage } from "@/lib/types";
-import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { type GroupDataProps, useGroup } from "@/context/group-context";
+import { useToast } from "@/components/ui/use-toast";
 
 export function LeaveGroupButton({ className }: { className?: string }) {
-  const router = useRouter();
+  const { toast } = useToast();
   const { members, loggedInUser } = useGroup() as GroupDataProps;
   const [isPending, startTransition] = useTransition();
 
@@ -35,14 +34,16 @@ export function LeaveGroupButton({ className }: { className?: string }) {
     startTransition(async () => {
       await removeMemberAction(groupMember).then(
         (res: ServerResponseMessage) => {
-          if (res) {
-            toast("Success", {
+          if (res.status === 200) {
+            toast({
+              title: "Success",
               description: res.message,
             });
-            router.push("/groups");
           } else {
-            toast.error("Error", {
-              description: "Could not remove member from group",
+            toast({
+              variant: "destructive",
+              title: "Error",
+              description: res.message,
             });
           }
         }

@@ -1,6 +1,6 @@
 "use client";
 
-import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
 import { type ServerResponseMessage } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,24 +20,32 @@ import { removeMemberAction } from "@/app/(protected)/groups/[groupId]/_actions/
 
 export function RemoveMemberButton({
   groupMemberDto,
+  setSelected,
   className,
 }: {
   groupMemberDto: GroupMemberDto;
+  setSelected: (value: string | null) => void;
   className?: string;
 }) {
   const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
 
   async function handleRemoveMember() {
     startTransition(async () => {
       await removeMemberAction(groupMemberDto).then(
         (res: ServerResponseMessage) => {
-          if (res) {
-            toast("Success", {
+          setSelected(null);
+
+          if (res.status === 200) {
+            toast({
+              title: "Success",
               description: res.message,
             });
           } else {
-            toast.error("Error", {
-              description: "Could not remove member from group",
+            toast({
+              variant: "destructive",
+              title: "Error",
+              description: res.message,
             });
           }
         }

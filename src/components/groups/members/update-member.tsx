@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
 import { updateMemberRoleAction } from "@/app/(protected)/groups/[groupId]/_actions/update-member-role";
 import {
   type GroupMemberDto,
@@ -26,6 +26,7 @@ export function UpdateMember({
   member: GroupMemberDto;
   setSelected: (value: string | null) => void;
 }) {
+  const { toast } = useToast();
   const memberRoles = [groupRole.enumValues[1], groupRole.enumValues[2]];
   const [selectedRole, setSelectedRole] = useState<
     "Group Owner" | "Member" | "Admin"
@@ -42,13 +43,16 @@ export function UpdateMember({
       };
 
       await updateMemberRoleAction(newMemberRole).then((res) => {
-        if (res) {
-          toast("Success", {
+        if (res.status === 200) {
+          toast({
+            title: "Success",
             description: res.message,
           });
         } else {
-          toast.error("Error", {
-            description: "Could not update member role",
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: res.message,
           });
         }
       });

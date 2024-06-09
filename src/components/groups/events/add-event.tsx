@@ -8,14 +8,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { addEventAction } from "@/app/(protected)/groups/[groupId]/_actions/add-event";
 import { useRef, useState, useTransition } from "react";
 import { PulseLoader } from "react-spinners";
-import { toast } from "sonner";
 import { Selector } from "@/components/selector";
 import { Checkbox } from "@/components/ui/checkbox";
 import { AvailablePlayersProps, DatePicker } from "@/components/ui/date-picker";
 import { type GroupDataProps, useGroup } from "@/context/group-context";
 import { getAvailablePlayerProps } from "@/lib/availabilities/utils";
+import { useToast } from "@/components/ui/use-toast";
 
 export function AddEvent({ children }: { children: React.ReactNode }) {
+  const { toast } = useToast();
   const { group, members, games } = useGroup() as GroupDataProps;
 
   const [isPending, startTransition] = useTransition();
@@ -44,7 +45,9 @@ export function AddEvent({ children }: { children: React.ReactNode }) {
     formData.append("gameId", selectedGameId);
 
     if (!startDate || !endDate) {
-      toast.error("Error", {
+      toast({
+        variant: "destructive",
+        title: "Error",
         description: "Start and end date are required",
       });
       return;
@@ -53,15 +56,17 @@ export function AddEvent({ children }: { children: React.ReactNode }) {
     startTransition(async () => {
       await addEventAction({ formData, startDate, endDate, members }).then(
         (res) => {
-          if (res) {
-            toast("Success", {
+          if (res.status === 200) {
+            toast({
+              title: "Success",
               description: res.message,
             });
             setOpen(false);
-            formRef.current?.reset();
           } else {
-            toast.error("Error", {
-              description: "Could not add event to group",
+            toast({
+              variant: "destructive",
+              title: "Error",
+              description: res.message,
             });
           }
         }

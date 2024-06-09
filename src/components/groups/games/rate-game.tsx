@@ -16,7 +16,7 @@ import { PulseLoader } from "react-spinners";
 import Image from "next/image";
 import { type RatingDto } from "@/use-case/games/types";
 import { addGameRatingAction } from "@/app/(protected)/groups/[groupId]/_actions/add-game-rating";
-import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
 
 export type SelectedGame = {
   id: string;
@@ -36,6 +36,7 @@ export function RateGame({
   const [isPending, startTransition] = useTransition();
   const [rating, setRating] = useState(0);
   const [open, setOpen] = useState(false);
+  const { toast } = useToast();
 
   const handleSubmitRating = () => {
     const newRating: RatingDto = {
@@ -46,15 +47,16 @@ export function RateGame({
 
     startTransition(async () => {
       await addGameRatingAction(newRating).then((res) => {
-        if (res) {
-          toast("Success", {
+        if (res.status === 200) {
+          toast({
+            title: "Success",
             description: res.message,
           });
-          setOpen(false);
-          setRating(0);
         } else {
-          toast.error("Error", {
-            description: "Could not add rating to game",
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: res.message,
           });
         }
       });

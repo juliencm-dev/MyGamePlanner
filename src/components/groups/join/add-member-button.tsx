@@ -5,6 +5,15 @@ import { useTransition } from "react";
 import { PulseLoader } from "react-spinners";
 import { addMemberToGroupAction } from "@/app/(public)/join/_actions/add-member-to-group";
 import { useRouter } from "next/navigation";
+import { useSocketConnection } from "@/components/websocket/useSocketConnection";
+import { socket } from "@/components/websocket/socket";
+
+export type NotificationProps = {
+  message: any;
+  sender: string;
+  receiver: string;
+  target: string;
+};
 
 export function AddMemberButton({
   groupId,
@@ -13,17 +22,21 @@ export function AddMemberButton({
   groupId: string;
   userId: string;
 }) {
+  useSocketConnection();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   async function handleJoinGroup() {
     startTransition(async () => {
-      addMemberToGroupAction(groupId, userId).then((res) => {
-        if (res.status !== 201) {
-          console.error("Failed to join group");
-          return;
-        }
-      });
+      const res = await addMemberToGroupAction(groupId, userId);
+      if (res.status !== 201) {
+        console.error("Failed to join group");
+        return;
+      }
+
+      if (res.notification) {
+        socket.emit("notification", res.notification);
+      }
     });
 
     router.push("/groups");

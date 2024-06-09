@@ -50,7 +50,10 @@ export function MemberList() {
               />
             )}
             {selectedMemberId === member.id && toggle && (
-              <RemoveMemberButton groupMemberDto={member} />
+              <RemoveMemberButton
+                groupMemberDto={member}
+                setSelected={setSelectedMemberId}
+              />
             )}
           </div>
         );

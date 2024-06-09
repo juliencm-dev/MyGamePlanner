@@ -6,6 +6,7 @@ import { useTransition } from "react";
 import { PulseLoader } from "react-spinners";
 import { toast } from "sonner";
 import { removeGameAction } from "@/app/(protected)/groups/[groupId]/_actions/remove-game";
+import { useToast } from "@/components/ui/use-toast";
 
 export function RemoveGame({
   gameId,
@@ -17,19 +18,21 @@ export function RemoveGame({
   setSelectedGameName: (name: string) => void;
 }) {
   const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
 
   function handleRemoveGame(formData: FormData) {
     startTransition(async () => {
       await removeGameAction(formData).then((res) => {
-        if (res) {
-          toast("Success", {
+        if (res.status === 200) {
+          toast({
+            title: "Success",
             description: res.message,
           });
-          setSelectedGameId("");
-          setSelectedGameName("");
         } else {
-          toast.error("Error", {
-            description: "Could not remove game from group",
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: res.message,
           });
         }
       });

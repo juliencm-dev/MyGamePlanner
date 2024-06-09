@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { addGameAction } from "@/app/(protected)/groups/[groupId]/_actions/add-game";
 import { useRef, useState, useTransition } from "react";
 import { PulseLoader } from "react-spinners";
-import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
 import { type GroupDataProps, useGroup } from "@/context/group-context";
 
 export function AddGame({ children }: { children: React.ReactNode }) {
@@ -16,19 +16,22 @@ export function AddGame({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const { group, loggedInUser } = useGroup() as GroupDataProps;
+  const { toast } = useToast();
 
   function handleAddGame(formData: FormData) {
     startTransition(async () => {
       await addGameAction(formData).then((res) => {
-        if (res) {
-          toast("Success", {
+        if (res.status === 200) {
+          toast({
+            title: "Success",
             description: res.message,
           });
           setOpen(false);
-          formRef.current?.reset();
         } else {
-          toast.error("Error", {
-            description: "Could not add game to group",
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: res.message,
           });
         }
       });

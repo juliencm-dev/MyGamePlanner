@@ -14,29 +14,31 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { useTransition } from "react";
-import { toast } from "sonner";
 import { type ServerResponseMessage } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { type GroupDataProps, useGroup } from "@/context/group-context";
 import { deleteGroupAction } from "@/app/(protected)/groups/[groupId]/_actions/delete-group";
+import { useToast } from "@/components/ui/use-toast";
 
 export function DeleteGroupButton({ className }: { className?: string }) {
-  const router = useRouter();
   const { group } = useGroup() as GroupDataProps;
   const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
 
   function handleLeaveGroup() {
     startTransition(async () => {
       await deleteGroupAction(group).then((res: ServerResponseMessage) => {
-        if (res) {
-          toast("Success", {
+        if (res.status === 200) {
+          toast({
+            title: "Success",
             description: res.message,
           });
-          router.push("/groups");
         } else {
-          toast.error("Error", {
-            description: "Could not delete group",
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: res.message,
           });
         }
       });

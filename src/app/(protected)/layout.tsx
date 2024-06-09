@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { Header } from "@/components/navigation/header";
-import { Toaster } from "@/components/ui/sonner";
-import { Suspense } from "react";
-import { Loading } from "@/components/loading";
+import { Toaster } from "@/components/ui/toaster";
+import { SocketConnector } from "@/components/websocket/socket-connector";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,6 +25,7 @@ export default function ProtectedLayout({
           {children}
         </main>
         <Toaster />
+        <SocketConnector />
       </body>
     </html>
   );

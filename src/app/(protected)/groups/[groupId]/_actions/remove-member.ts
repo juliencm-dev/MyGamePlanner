@@ -7,15 +7,16 @@ import { revalidatePath } from "next/cache";
 export async function removeMemberAction(
   groupMemberDto: GroupMemberDto
 ): Promise<ServerResponseMessage> {
-  return await removeMemberFromGroup(
+  const res = await removeMemberFromGroup(
     groupMemberDto.groupId,
     groupMemberDto.id
-  ).then((res) => {
-    if (res) {
-      revalidatePath(`/groups/${groupMemberDto.groupId}`);
-      return { message: "Member removed from group", status: 200 };
-    } else {
-      return { message: "Could not remove member from group", status: 500 };
-    }
-  });
+  );
+
+  if (!res) {
+    return { message: "Failed to remove member from group", status: 400 };
+  }
+
+  revalidatePath(`/groups/${groupMemberDto.groupId}`);
+
+  return { message: "Member removed from group", status: 200 };
 }
