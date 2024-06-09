@@ -14,7 +14,7 @@ import {
 
 import { socket } from "@/components/websocket/socket";
 import { Button } from "@/components/ui/button";
-import { type GroupMemberDto } from "@/use-case/groups/types";
+import { type GroupMemberDto } from "@/db/data-access/dto/groups/types";
 import { useTransition } from "react";
 import { removeMemberAction } from "@/app/(protected)/groups/[groupId]/_actions/remove-member";
 import { ServerResponseMessage } from "@/lib/types";

@@ -1,4 +1,4 @@
-import { type GroupDto } from "@/use-case/groups/types";
+import { type GroupDto } from "@/db/data-access/dto/groups/types";
 import Link from "next/link";
 import { AddGroupToFavorites } from "@/components/groups/add-group-to-favorites";
 import { cn } from "@/lib/utils";

@@ -15,7 +15,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useTransition } from "react";
-import { type GroupMemberDto } from "@/use-case/groups/types";
+import { type GroupMemberDto } from "@/db/data-access/dto/groups/types";
 import { removeMemberAction } from "@/app/(protected)/groups/[groupId]/_actions/remove-member";
 import { socket } from "@/components/websocket/socket";
 

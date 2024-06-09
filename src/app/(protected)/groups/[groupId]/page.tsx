@@ -1,16 +1,20 @@
-import { type GroupDto, type GroupMemberDto } from "@/use-case/groups/types";
-import { type GameDto } from "@/use-case/games/types";
-import { type UserAvailabilityDto, type UserDto } from "@/use-case/users/types";
+import {
+  type GroupDto,
+  type GroupMemberDto,
+} from "@/db/data-access/dto/groups/types";
+import { type GameDto } from "@/db/data-access/dto/games/types";
+import { type UserDto } from "@/db/data-access/dto/users/types";
 import { type GroupDataProps } from "@/context/group-context";
+import { type EventDto } from "@/db/data-access/dto/events/types";
 
-import { getGroupById, getGroupMembers } from "@/data-access/group";
+import { getGroupById, getGroupMembers } from "@/db/data-access/groups";
+import { getGamesByGroupId } from "@/db/data-access/games";
+import { getCurrentUser } from "@/db/data-access/user";
+import { getEventsAndAttendanceByGroupId } from "@/db/data-access/events";
 import { getInviteLink } from "@/lib/tokens";
-import { getGamesByGroupId } from "@/data-access/games";
-import { getCurrentUser } from "@/data-access/user";
+
 import { GroupClientWrapper } from "@/components/groups/group-client-wrapper";
 import { redirect } from "next/navigation";
-import { getEventsAndAttendanceByGroupId } from "@/data-access/events";
-import { EventDto } from "@/use-case/events/types";
 
 export const revalidate = 1800;
 

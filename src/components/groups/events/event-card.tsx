@@ -10,7 +10,7 @@ import {
 import {
   type EventConfirmationDto,
   type EventDto,
-} from "@/use-case/events/types";
+} from "@/db/data-access/dto/events/types";
 import { format } from "date-fns";
 import { MembersAttendanceList } from "@/components/groups/events/members-attendance-list";
 import { UserAttendanceConfirmation } from "@/components/groups/events/user-attendance-confirmation";

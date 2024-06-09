@@ -1,11 +1,14 @@
 "use server";
 
-import { NotificationProps } from "@/components/groups/join/add-member-button";
-import { createEvent } from "@/data-access/events";
-import { ServerResponseMessage } from "@/lib/types";
-import { EventConfirmationDto, EventDto } from "@/use-case/events/types";
-import { GroupMemberDto } from "@/use-case/groups/types";
-import { UserDto } from "@/use-case/users/types";
+import { type NotificationProps } from "@/components/groups/join/add-member-button";
+import { type ServerResponseMessage } from "@/lib/types";
+import {
+  type EventConfirmationDto,
+  type EventDto,
+} from "@/db/data-access/dto/events/types";
+import { type GroupMemberDto } from "@/db/data-access/dto/groups/types";
+import { type UserDto } from "@/db/data-access/dto/users/types";
+import { createEvent } from "@/db/data-access/events";
 import { revalidatePath } from "next/cache";
 
 export async function addEventAction({

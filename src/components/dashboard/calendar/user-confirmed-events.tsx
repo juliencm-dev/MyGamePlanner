@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Attendance, type EventDto } from "@/use-case/events/types";
-import { UserDto } from "@/use-case/users/types";
+import { Attendance, type EventDto } from "@/db/data-access/dto/events/types";
+import { type UserDto } from "@/db/data-access/dto/users/types";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 

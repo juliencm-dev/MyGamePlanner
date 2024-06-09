@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { type GroupMemberDto } from "@/use-case/groups/types";
+import { type GroupMemberDto } from "@/db/data-access/dto/groups/types";
 import { RemoveMemberButton } from "@/components/groups/members/remove-member-button";
 import { UpdateMember } from "@/components/groups/members/update-member";
 import { useState } from "react";

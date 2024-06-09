@@ -1,8 +1,8 @@
 import {
   createInviteToken,
   getInviteTokenByGroupId,
-} from "@/data-access/group";
-import { GroupInviteTokenDto } from "@/use-case/groups/types";
+} from "@/db/data-access/groups";
+import { type GroupInviteTokenDto } from "@/db/data-access/dto/groups/types";
 import { createId } from "@paralleldrive/cuid2";
 import { cache } from "react";
 

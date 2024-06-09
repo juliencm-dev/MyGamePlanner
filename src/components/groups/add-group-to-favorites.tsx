@@ -2,7 +2,7 @@
 
 import { addFavoriteAction } from "@/app/(protected)/groups/_actions/add-favorite";
 import { removeFavoriteAction } from "@/app/(protected)/groups/_actions/remove-favorite";
-import { type GroupDto } from "@/use-case/groups/types";
+import { type GroupDto } from "@/db/data-access/dto/groups/types";
 import { StarIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";

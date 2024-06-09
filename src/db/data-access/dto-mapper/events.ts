@@ -1,9 +1,13 @@
-import { EventConfirmation, EventWithRelations, Event } from "@/db/schema";
+import {
+  type EventConfirmation,
+  type EventWithRelations,
+  type Event,
+} from "@/db/schema";
 import {
   Attendance,
-  EventConfirmationDto,
-  EventDto,
-} from "@/use-case/events/types";
+  type EventConfirmationDto,
+  type EventDto,
+} from "@/db/data-access/dto/events/types";
 
 export function toEventDtoMapper(events: EventWithRelations[]): EventDto[] {
   return events.map((event) => {

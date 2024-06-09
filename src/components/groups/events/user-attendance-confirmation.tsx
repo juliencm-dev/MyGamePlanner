@@ -11,9 +11,9 @@ import { socket } from "@/components/websocket/socket";
 import { GroupDataProps, useGroup } from "@/context/group-context";
 import {
   Attendance,
-  EventConfirmationDto,
-  EventDto,
-} from "@/use-case/events/types";
+  type EventConfirmationDto,
+  type EventDto,
+} from "@/db/data-access/dto/events/types";
 import { createId } from "@paralleldrive/cuid2";
 import { CheckIcon, Cross1Icon, QuestionMarkIcon } from "@radix-ui/react-icons";
 import { useTransition } from "react";

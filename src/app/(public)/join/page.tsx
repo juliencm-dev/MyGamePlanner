@@ -8,8 +8,8 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { redirect } from "next/navigation";
-import { GroupDto } from "@/use-case/groups/types";
-import { getGroupByToken } from "@/data-access/group";
+import { type GroupDto } from "@/db/data-access/dto/groups/types";
+import { getGroupByToken } from "@/db/data-access/groups";
 import { AddMemberButton } from "@/components/groups/join/add-member-button";
 import { auth } from "@/auth";
 

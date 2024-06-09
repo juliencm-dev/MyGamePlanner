@@ -8,7 +8,7 @@ import {
   groupAvailableGames,
   groupGameRating,
 } from "@/db/schema";
-import { GameDto, RatingDto } from "@/use-case/games/types";
+import { GameDto, RatingDto } from "@/dto/games/types";
 import { getImageFromBucket } from "@/db/s3";
 import { cache } from "react";
 import {
@@ -16,7 +16,7 @@ import {
   toGameMapper,
   toGameRatingDtoMapper,
   toGameRatingMapper,
-} from "@/data-access/dto-mapper/games";
+} from "@/db/data-access/dto-mapper/games";
 
 export async function createGame({ newGame }: { newGame: GameDto }) {
   const game = toGameMapper(newGame);

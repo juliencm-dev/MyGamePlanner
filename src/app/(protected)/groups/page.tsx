@@ -1,6 +1,6 @@
 import { CreateGroupButton } from "@/components/groups/create-group";
-import { getUserGroups } from "@/data-access/group";
-import { type GroupDto } from "@/use-case/groups/types";
+import { getUserGroups } from "@/db/data-access/groups";
+import { type GroupDto } from "@/db/data-access/dto/groups/types";
 import { GroupCard } from "@/components/groups/group-card";
 
 export default async function GroupsPage() {

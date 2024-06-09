@@ -3,8 +3,8 @@
 import {
   addUserFavoriteGroup,
   getUserFavoriteGroups,
-} from "@/data-access/user";
-import { ServerResponseMessage } from "@/lib/types";
+} from "@/db/data-access/user";
+import { type ServerResponseMessage } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 
 export async function addFavoriteAction({

@@ -1,5 +1,5 @@
-import { getGamesByGroupId } from "@/data-access/games";
-import { GameDto } from "@/use-case/games/types";
+import { getGamesByGroupId } from "@/db/data-access/games";
+import { type GameDto } from "@/db/data-access/dto/games/types";
 
 export async function getGamesAction({
   groupId,

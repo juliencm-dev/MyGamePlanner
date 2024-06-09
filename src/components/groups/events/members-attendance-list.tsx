@@ -1,7 +1,10 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { GroupDataProps, useGroup } from "@/context/group-context";
-import { Attendance, type EventConfirmationDto } from "@/use-case/events/types";
+import {
+  Attendance,
+  type EventConfirmationDto,
+} from "@/db/data-access/dto/events/types";
 
 import { CheckIcon, Cross1Icon } from "@radix-ui/react-icons";
 

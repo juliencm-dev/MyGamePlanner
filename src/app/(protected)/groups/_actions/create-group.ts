@@ -1,9 +1,9 @@
 "use server";
 
 import { auth } from "@/auth";
-import { createGroup } from "@/data-access/group";
-import { ServerResponseMessage } from "@/lib/types";
-import { GroupDto } from "@/use-case/groups/types";
+import { createGroup } from "@/db/data-access/groups";
+import { type ServerResponseMessage } from "@/lib/types";
+import { type GroupDto } from "@/db/data-access/dto/groups/types";
 import { revalidatePath } from "next/cache";
 
 export async function createGroupeAction(

@@ -14,7 +14,7 @@ import { StarRating } from "@/components/groups/games/star-rating";
 import { useState, useTransition } from "react";
 import { PulseLoader } from "react-spinners";
 import Image from "next/image";
-import { type RatingDto } from "@/use-case/games/types";
+import { type RatingDto } from "@/db/data-access/dto/games/types";
 import { addGameRatingAction } from "@/app/(protected)/groups/[groupId]/_actions/add-game-rating";
 import { useToast } from "@/components/ui/use-toast";
 

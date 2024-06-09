@@ -16,7 +16,7 @@ import { updateMemberRoleAction } from "@/app/(protected)/groups/[groupId]/_acti
 import {
   type GroupMemberDto,
   type UpdateMemberDto,
-} from "@/use-case/groups/types";
+} from "@/db/data-access/dto/groups/types";
 import { PulseLoader } from "react-spinners";
 import { socket } from "@/components/websocket/socket";
 

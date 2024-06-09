@@ -10,9 +10,12 @@ import {
   groupEvents,
   groupEventsConfirmation,
 } from "@/db/schema";
-import { EventDto, EventConfirmationDto } from "@/use-case/events/types";
-import { getUserGroups } from "@/data-access/group";
-import { GroupDto } from "@/use-case/groups/types";
+import {
+  EventDto,
+  EventConfirmationDto,
+} from "@/db/data-access/dto/events/types";
+import { getUserGroups } from "@/db/data-access/groups";
+import { GroupDto } from "@/db/data-access/dto/groups/types";
 import { auth } from "@/auth";
 import { cache } from "react";
 import {
@@ -20,7 +23,7 @@ import {
   toEventConfirmationMapper,
   toEventDtoMapper,
   toEventMapper,
-} from "@/data-access/dto-mapper/events";
+} from "@/db/data-access/dto-mapper/events";
 
 export async function createEvent({
   newEvent,

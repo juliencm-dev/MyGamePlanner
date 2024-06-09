@@ -1,7 +1,7 @@
 "use server";
-import { deleteGroup } from "@/data-access/group";
-import { ServerResponseMessage } from "@/lib/types";
-import { GroupDto } from "@/use-case/groups/types";
+import { deleteGroup } from "@/db/data-access/groups";
+import { type ServerResponseMessage } from "@/lib/types";
+import { type GroupDto } from "@/db/data-access/dto/groups/types";
 import { revalidatePath } from "next/cache";
 
 export async function deleteGroupAction(

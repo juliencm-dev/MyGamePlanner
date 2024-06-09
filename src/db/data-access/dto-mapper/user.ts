@@ -1,5 +1,5 @@
 import { Availability, UserWithRelations } from "@/db/schema";
-import { UserAvailabilityDto, UserDto } from "@/use-case/users/types";
+import { UserAvailabilityDto, UserDto } from "@/db/data-access/dto/users/types";
 
 /**
  * Maps an array of UserWithRelations objects to an array of UserDto objects.

@@ -1,8 +1,8 @@
 "use server";
 
 import { NotificationProps } from "@/components/groups/join/add-member-button";
-import { addMemberToGroup, getGroupById } from "@/data-access/group";
-import { getCurrentUser } from "@/data-access/user";
+import { addMemberToGroup, getGroupById } from "@/db/data-access/groups";
+import { getCurrentUser } from "@/db/data-access/user";
 import { ServerResponseMessage } from "@/lib/types";
 
 export async function addMemberToGroupAction(

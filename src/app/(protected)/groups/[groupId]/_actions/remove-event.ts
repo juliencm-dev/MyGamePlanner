@@ -1,7 +1,7 @@
 "use server";
 
-import { deleteEvent } from "@/data-access/events";
-import { ServerResponseMessage } from "@/lib/types";
+import { deleteEvent } from "@/db/data-access/events";
+import { type ServerResponseMessage } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 
 export async function removeEventAction(

@@ -3,10 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { Selector } from "@/components/selector";
 import { useState } from "react";
-import { type GroupMemberDto } from "@/use-case/groups/types";
+import { type GroupMemberDto } from "@/db/data-access/dto/groups/types";
 import { AddEvent } from "@/components/groups/events/add-event";
 import { RemoveEvent } from "@/components/groups/events/remove-event";
-import { type GameDto } from "@/use-case/games/types";
+import { type GameDto } from "@/db/data-access/dto/games/types";
 import { type GroupDataProps, useGroup } from "@/context/group-context";
 
 export function ManageEvents() {

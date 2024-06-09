@@ -1,6 +1,6 @@
 "use server";
 
-import { removeUserFavoriteGroup } from "@/data-access/user";
+import { removeUserFavoriteGroup } from "@/db/data-access/user";
 import { ServerResponseMessage } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 

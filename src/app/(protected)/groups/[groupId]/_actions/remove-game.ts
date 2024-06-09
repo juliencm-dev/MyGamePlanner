@@ -1,7 +1,7 @@
 "use server";
 
-import { deleteGame } from "@/data-access/games";
-import { ServerResponseMessage } from "@/lib/types";
+import { deleteGame } from "@/db/data-access/games";
+import { type ServerResponseMessage } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 
 export async function removeGameAction(

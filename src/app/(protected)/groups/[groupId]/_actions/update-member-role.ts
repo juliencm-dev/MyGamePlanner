@@ -1,8 +1,8 @@
 "use server";
 
-import { updateMemberRole } from "@/data-access/group";
-import { ServerResponseMessage } from "@/lib/types";
-import { UpdateMemberDto } from "@/use-case/groups/types";
+import { updateMemberRole } from "@/db/data-access/groups";
+import { type ServerResponseMessage } from "@/lib/types";
+import { type UpdateMemberDto } from "@/db/data-access/dto/groups/types";
 import { revalidatePath } from "next/cache";
 
 export async function updateMemberRoleAction(

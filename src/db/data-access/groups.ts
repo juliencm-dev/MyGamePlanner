@@ -17,19 +17,19 @@ import {
   GroupInviteTokenDto,
   GroupMemberDto,
   UpdateMemberDto,
-} from "@/use-case/groups/types";
+} from "@/db/data-access/dto/groups/types";
 import {
   removeAttendanceByGroupAndUserId,
   updateAttendanceByGroupId,
-} from "@/data-access/events";
-import { removeUserFavoriteGroupByUserId } from "@/data-access/user";
+} from "@/db/data-access/events";
+import { removeUserFavoriteGroupByUserId } from "@/db/data-access/user";
 import { cache } from "react";
 import {
   toGroupDtoMapper,
   toGroupMapper,
   toGroupMemberDtoMapper,
   tokenMapper,
-} from "@/data-access/dto-mapper/group";
+} from "@/db/data-access/dto-mapper/group";
 
 export async function createGroup(newGroup: GroupDto) {
   const group = toGroupMapper(newGroup);

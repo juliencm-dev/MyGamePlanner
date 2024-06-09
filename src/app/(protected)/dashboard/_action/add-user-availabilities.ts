@@ -1,8 +1,8 @@
 "use server";
+import { type ServerResponseMessage } from "@/lib/types";
+import { type UserAvailabilityDto } from "@/db/data-access/dto/users/types";
 
-import { createUserAvailabilities } from "@/data-access/user";
-import { ServerResponseMessage } from "@/lib/types";
-import { UserAvailabilityDto } from "@/use-case/users/types";
+import { createUserAvailabilities } from "@/db/data-access/user";
 import { revalidatePath } from "next/cache";
 
 export async function addUserAvailabilitiesAction({

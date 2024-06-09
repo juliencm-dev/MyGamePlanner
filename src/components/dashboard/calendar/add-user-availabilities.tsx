@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { TimePickerRange } from "@/components/ui/time-picker-range";
 import { generateAvailabilities } from "@/lib/availabilities/utils";
-import { type UserAvailabilityDto } from "@/use-case/users/types";
+import { type UserAvailabilityDto } from "@/db/data-access/dto/users/types";
 import { useState, useTransition } from "react";
 import { PulseLoader } from "react-spinners";
 import { useToast } from "@/components/ui/use-toast";

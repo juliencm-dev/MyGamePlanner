@@ -1,8 +1,8 @@
-import { AvailablePlayersProps } from "@/components/ui/date-picker";
+import { type AvailablePlayersProps } from "@/components/ui/date-picker";
 import { daysList } from "@/components/ui/day-selector";
-import { TimePickerRange } from "@/components/ui/time-picker-range";
-import { GroupMemberDto } from "@/use-case/groups/types";
-import { UserAvailabilityDto } from "@/use-case/users/types";
+import { type TimePickerRange } from "@/components/ui/time-picker-range";
+import { type GroupMemberDto } from "@/db/data-access/dto/groups/types";
+import { type UserAvailabilityDto } from "@/db/data-access/dto/users/types";
 import { DateTime } from "luxon";
 
 export function generateAvailabilities(

@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { socket } from "@/components/websocket/socket";
 import { useToast } from "@/components/ui/use-toast";
 import { NotificationProps } from "@/components/groups/join/add-member-button";
-import { ToastAction } from "@/components/ui/toast";
 import { notificationAction } from "@/components/websocket/actions/socket-action";
 
 export function SocketConnector({

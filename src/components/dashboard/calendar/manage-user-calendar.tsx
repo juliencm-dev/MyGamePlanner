@@ -7,10 +7,9 @@ import { UserConfirmedEvents } from "@/components/dashboard/calendar/user-confir
 import { AddUserAvailabilities } from "@/components/dashboard/calendar/add-user-availabilities";
 import { AddUserAbsences } from "@/components/dashboard/calendar/add-user-absences";
 import { useState } from "react";
-import { Attendance, type EventDto } from "@/use-case/events/types";
-import { UserDto } from "@/use-case/users/types";
+import { Attendance, type EventDto } from "@/db/data-access/dto/events/types";
+import { type UserDto } from "@/db/data-access/dto/users/types";
 import { cn } from "@/lib/utils";
-import { group } from "console";
 
 export function ManageUserCalendar({
   events,

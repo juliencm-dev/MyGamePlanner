@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useTransition } from "react";
 import { PulseLoader } from "react-spinners";
 import { removeGameAction } from "@/app/(protected)/groups/[groupId]/_actions/remove-game";

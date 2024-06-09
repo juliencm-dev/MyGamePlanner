@@ -1,7 +1,7 @@
 "use server";
-import { removeMemberFromGroup } from "@/data-access/group";
+import { removeMemberFromGroup } from "@/db/data-access/groups";
 import { ServerResponseMessage } from "@/lib/types";
-import { GroupMemberDto } from "@/use-case/groups/types";
+import { type GroupMemberDto } from "@/db/data-access/dto/groups/types";
 import { revalidatePath } from "next/cache";
 
 export async function removeMemberAction(

@@ -1,8 +1,8 @@
 "use client";
 
-import { GameDto } from "@/use-case/games/types";
-import { EventDto } from "@/use-case/events/types";
-import { GroupMemberDto } from "@/use-case/groups/types";
+import { type GameDto } from "@/db/data-access/dto/games/types";
+import { type EventDto } from "@/db/data-access/dto/events/types";
+import { type GroupMemberDto } from "@/db/data-access/dto/groups/types";
 
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useState } from "react";

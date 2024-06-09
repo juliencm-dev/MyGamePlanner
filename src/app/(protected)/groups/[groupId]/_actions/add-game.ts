@@ -1,11 +1,10 @@
 "use server";
 
-import { createGame, updateGameImage } from "@/data-access/games";
+import { createGame, updateGameImage } from "@/db/data-access/games";
 import { S3AllowedContentTypes, addImageToBucket } from "@/db/s3";
-import { Game } from "@/db/schema";
 import { processImageFile } from "@/lib/img-processing";
-import { ServerResponseMessage } from "@/lib/types";
-import { GameDto } from "@/use-case/games/types";
+import { type ServerResponseMessage } from "@/lib/types";
+import { type GameDto } from "@/db/data-access/dto/games/types";
 import { revalidatePath } from "next/cache";
 
 export async function addGameAction(

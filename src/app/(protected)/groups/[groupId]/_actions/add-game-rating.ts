@@ -1,8 +1,8 @@
 "use server";
 
-import { addGameRating } from "@/data-access/games";
+import { addGameRating } from "@/db/data-access/games";
 import { ServerResponseMessage } from "@/lib/types";
-import { RatingDto } from "@/use-case/games/types";
+import { type RatingDto } from "@/db/data-access/dto/games/types";
 
 export async function addGameRatingAction(
   rating: RatingDto

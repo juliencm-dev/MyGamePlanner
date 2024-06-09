@@ -1,8 +1,11 @@
 import React, { createContext, useContext } from "react";
-import { EventDto } from "@/use-case/events/types";
-import { GameDto } from "@/use-case/games/types";
-import { GroupDto, GroupMemberDto } from "@/use-case/groups/types";
-import { UserDto } from "@/use-case/users/types";
+import { type EventDto } from "@/db/data-access/dto/events/types";
+import { type GameDto } from "@/db/data-access/dto/games/types";
+import {
+  type GroupDto,
+  type GroupMemberDto,
+} from "@/db/data-access/dto/groups/types";
+import { type UserDto } from "@/db/data-access/dto/users/types";
 
 export type GroupDataProps = {
   group: GroupDto;

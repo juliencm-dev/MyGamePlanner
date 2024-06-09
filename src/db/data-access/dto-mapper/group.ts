@@ -1,10 +1,14 @@
-import { Group, GroupMemberWithRelations, InviteToken } from "@/db/schema";
 import {
-  GroupDto,
-  GroupInviteTokenDto,
-  GroupMemberDto,
-} from "@/use-case/groups/types";
-import { toUserAvailabilityDtoMapper } from "@/data-access/dto-mapper/user";
+  type Group,
+  type GroupMemberWithRelations,
+  type InviteToken,
+} from "@/db/schema";
+import {
+  type GroupDto,
+  type GroupInviteTokenDto,
+  type GroupMemberDto,
+} from "@/db/data-access/dto/groups/types";
+import { toUserAvailabilityDtoMapper } from "@/db/data-access/dto-mapper/user";
 
 export function tokenMapper(inviteToken: InviteToken) {
   return {
@@ -13,6 +17,13 @@ export function tokenMapper(inviteToken: InviteToken) {
   } as GroupInviteTokenDto;
 }
 
+/**
+ * Maps an array of Group objects to an array of GroupDto objects.
+ *
+ * @param groups - The array of Group objects to be mapped.
+ * @param isFavourite - An optional array of booleans indicating whether each group is a favorite.
+ * @returns An array of GroupDto objects.
+ */
 export function toGroupDtoMapper(
   groups: Group[],
   isFavourite?: boolean[]
