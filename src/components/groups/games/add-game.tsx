@@ -10,6 +10,7 @@ import { useRef, useState, useTransition } from "react";
 import { PulseLoader } from "react-spinners";
 import { useToast } from "@/components/ui/use-toast";
 import { type GroupDataProps, useGroup } from "@/context/group-context";
+import { socket } from "@/components/websocket/socket";
 
 export function AddGame({ children }: { children: React.ReactNode }) {
   const [isPending, startTransition] = useTransition();
@@ -50,7 +51,9 @@ export function AddGame({ children }: { children: React.ReactNode }) {
             title: "Success",
             description: res.message,
           });
+
           setOpen(false);
+          socket.emit("groupUpdate", { target: group.id });
           resetGameForm();
         } else {
           toast({
@@ -94,7 +97,6 @@ export function AddGame({ children }: { children: React.ReactNode }) {
               required
             />
           </div>
-
           <div className='flex gap-4'>
             <div className='flex flex-col gap-2'>
               <Label>Minimum players * </Label>

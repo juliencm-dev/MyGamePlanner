@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { type GroupDataProps, useGroup } from "@/context/group-context";
 import { deleteGroupAction } from "@/app/(protected)/groups/[groupId]/_actions/delete-group";
 import { useToast } from "@/components/ui/use-toast";
+import { socket } from "@/components/websocket/socket";
 
 export function DeleteGroupButton({ className }: { className?: string }) {
   const { group } = useGroup() as GroupDataProps;
@@ -35,6 +36,7 @@ export function DeleteGroupButton({ className }: { className?: string }) {
             title: "Success",
             description: res.message,
           });
+          socket.emit("groupUpdate", { target: group.id });
           router.push("/groups");
         } else {
           toast({

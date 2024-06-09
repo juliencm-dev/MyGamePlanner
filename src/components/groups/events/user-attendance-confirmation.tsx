@@ -7,6 +7,7 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
+import { socket } from "@/components/websocket/socket";
 import { GroupDataProps, useGroup } from "@/context/group-context";
 import {
   Attendance,
@@ -40,7 +41,7 @@ export function UserAttendanceConfirmation({
   event: EventDto;
   currentUserConfirmation: Attendance;
 }) {
-  const { loggedInUser } = useGroup() as GroupDataProps;
+  const { loggedInUser, group } = useGroup() as GroupDataProps;
   const [isPending, startTransition] = useTransition();
 
   function handleUserAttendanceConfirmation(value: Attendance) {
@@ -56,6 +57,7 @@ export function UserAttendanceConfirmation({
         groupId: event.groupId,
       }).then((res) => {
         if (res) {
+          socket.emit("groupUpdate", { target: group.id });
           toast("Success", {
             description: res.message,
           });

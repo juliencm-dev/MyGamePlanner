@@ -6,6 +6,8 @@ import { useTransition } from "react";
 import { PulseLoader } from "react-spinners";
 import { removeGameAction } from "@/app/(protected)/groups/[groupId]/_actions/remove-game";
 import { useToast } from "@/components/ui/use-toast";
+import { GroupDataProps, useGroup } from "@/context/group-context";
+import { socket } from "@/components/websocket/socket";
 
 export function RemoveGame({
   gameId,
@@ -16,6 +18,7 @@ export function RemoveGame({
   setSelectedGameId: (id: string) => void;
   setSelectedGameName: (name: string) => void;
 }) {
+  const { group } = useGroup() as GroupDataProps;
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
@@ -29,6 +32,7 @@ export function RemoveGame({
             title: "Success",
             description: res.message,
           });
+          socket.emit("groupUpdate", { target: group.id });
         } else {
           toast({
             variant: "destructive",

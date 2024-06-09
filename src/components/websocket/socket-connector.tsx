@@ -30,19 +30,18 @@ export function SocketConnector({
         socket.emit("joinGroup", groupId);
       });
 
+      socket.on("serverGroupUpdate", (update: any) => {
+        handleRevalidate({ groupId: update.groupId });
+      });
+
       socket.on("serverNotification", (notification: NotificationProps) => {
         toast({
           variant: "notification",
           title: "Notification",
           description: notification.message,
-          action: (
-            <ToastAction
-              onClick={() => handleRevalidate({ groupId: notification.target })}
-              altText='Click ok to update group page'>
-              Ok
-            </ToastAction>
-          ),
         });
+
+        handleRevalidate({ groupId: notification.target });
       });
     });
 

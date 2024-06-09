@@ -12,6 +12,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+import { socket } from "@/components/websocket/socket";
 import { Button } from "@/components/ui/button";
 import { type GroupMemberDto } from "@/use-case/groups/types";
 import { useTransition } from "react";
@@ -41,6 +42,11 @@ export function LeaveGroupButton({ className }: { className?: string }) {
               title: "Success",
               description: res.message,
             });
+            socket.emit("removeFromGroup", {
+              groupId: groupMember.groupId,
+              userId: groupMember.id,
+            });
+            socket.emit("groupUpdate", { target: groupMember.groupId });
             router.push("/groups");
           } else {
             toast({

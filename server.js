@@ -50,6 +50,10 @@ app.prepare().then(() => {
       socket.to(data.target).emit("serverNotification", data)
     });
 
+    socket.on("groupUpdate", (data) => { 
+      socket.to(data.target).emit("serverGroupUpdate", { groupId: data.target})
+    });
+
     socket.on("disconnect", () => {
       for (let [userId, socketId] of userSocketMap.entries()) {
         if (socketId === socket.id) {

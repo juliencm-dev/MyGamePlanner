@@ -18,6 +18,7 @@ import {
   type UpdateMemberDto,
 } from "@/use-case/groups/types";
 import { PulseLoader } from "react-spinners";
+import { socket } from "@/components/websocket/socket";
 
 export function UpdateMember({
   member,
@@ -48,6 +49,7 @@ export function UpdateMember({
             title: "Success",
             description: res.message,
           });
+          socket.emit("groupUpdate", { target: member.groupId });
         } else {
           toast({
             variant: "destructive",

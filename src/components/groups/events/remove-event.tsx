@@ -1,11 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useTransition } from "react";
 import { PulseLoader } from "react-spinners";
 import { removeEventAction } from "@/app/(protected)/groups/[groupId]/_actions/remove-event";
 import { useToast } from "@/components/ui/use-toast";
+import { GroupDataProps, useGroup } from "@/context/group-context";
+import { socket } from "@/components/websocket/socket";
 
 export function RemoveEvent({
   eventId,
@@ -16,6 +17,7 @@ export function RemoveEvent({
   setSelectedEventId: (id: string) => void;
   setSelectedEventName: (name: string) => void;
 }) {
+  const { group } = useGroup() as GroupDataProps;
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
@@ -29,6 +31,7 @@ export function RemoveEvent({
             title: "Success",
             description: res.message,
           });
+          socket.emit("groupUpdate", { target: group.id });
         } else {
           toast({
             variant: "destructive",
