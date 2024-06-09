@@ -20,7 +20,7 @@ export async function addMemberToGroupAction(
       notification: {
         message: `${user.name} has joined ${group.name}`,
         sender: user.id,
-        receiver: group.ownerId,
+        receivers: [group.ownerId],
         target: group.id,
       } as NotificationProps,
       status: 201,

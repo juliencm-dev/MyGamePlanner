@@ -1,13 +1,19 @@
 "use client";
 
 import { useEffect } from "react";
-import { socket } from "./socket";
-import { useToast } from "../ui/use-toast";
-import { NotificationProps } from "../groups/join/add-member-button";
-import { ToastAction } from "../ui/toast";
-import { notificationAction } from "./actions/socket-action";
+import { socket } from "@/components/websocket/socket";
+import { useToast } from "@/components/ui/use-toast";
+import { NotificationProps } from "@/components/groups/join/add-member-button";
+import { ToastAction } from "@/components/ui/toast";
+import { notificationAction } from "@/components/websocket/actions/socket-action";
 
-export function SocketConnector() {
+export function SocketConnector({
+  userGroupIds,
+  userId,
+}: {
+  userGroupIds: string[];
+  userId: string;
+}) {
   const { toast } = useToast();
 
   async function handleRevalidate({ groupId }: { groupId: string }) {
@@ -18,9 +24,15 @@ export function SocketConnector() {
     socket.connect();
 
     socket.on("connect", () => {
+      socket.emit("registerUser", userId);
+
+      userGroupIds.forEach((groupId) => {
+        socket.emit("joinGroup", groupId);
+      });
+
       socket.on("serverNotification", (notification: NotificationProps) => {
-        console.log("Notification received", notification);
         toast({
+          variant: "notification",
           title: "Notification",
           description: notification.message,
           action: (

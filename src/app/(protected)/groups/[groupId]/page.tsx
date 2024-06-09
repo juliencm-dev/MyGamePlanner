@@ -1,58 +1,38 @@
 import { type GroupDto, type GroupMemberDto } from "@/use-case/groups/types";
+import { type GameDto } from "@/use-case/games/types";
+import { type UserAvailabilityDto, type UserDto } from "@/use-case/users/types";
+import { type GroupDataProps } from "@/context/group-context";
+
 import { getGroupById, getGroupMembers } from "@/data-access/group";
 import { getInviteLink } from "@/lib/tokens";
 import { getGamesByGroupId } from "@/data-access/games";
-import { type GameDto } from "@/use-case/games/types";
-import { type UserAvailabilityDto, type UserDto } from "@/use-case/users/types";
 import { getCurrentUser } from "@/data-access/user";
-import { type GroupDataProps } from "@/context/group-context";
 import { GroupClientWrapper } from "@/components/groups/group-client-wrapper";
 import { redirect } from "next/navigation";
 import { getEventsAndAttendanceByGroupId } from "@/data-access/events";
 import { EventDto } from "@/use-case/events/types";
+
+export const revalidate = 1800;
 
 export default async function SelectedGroupPage({
   params,
 }: {
   params: { groupId: string };
 }) {
-  const groupId: string = params.groupId;
+  const { groupId } = params;
 
-  const user: UserDto = await getCurrentUser();
-  const group: GroupDto = await getGroupById(groupId);
-  const members: GroupMemberDto[] = await getGroupMembers(groupId);
+  const groupData: GroupDataProps = await getGroupDataProps({ groupId });
 
-  if (!isUserMemberOfGroup(user.id, members)) return redirect("/groups");
+  if (!groupData.group) return redirect("/groups");
 
-  const games: GameDto[] = await getGamesByGroupId({ groupId });
-  const memberAvailabilities: UserAvailabilityDto[] = [];
-  const events: EventDto[] = await getEventsAndAttendanceByGroupId({
-    groupId,
-  });
+  if (!isUserMemberOfGroup(groupData.loggedInUser.id, groupData.members))
+    return redirect("/groups");
 
-  const isAdmin: boolean = isUserAdmin(user.id, members);
-
-  const inviteUrl: string = await getInviteLink({
-    groupId: group.id as string,
-  });
-
-  const groupData: GroupDataProps = {
-    group,
-    members,
-    memberAvailabilities,
-    games,
-    events,
-    loggedInUser: user,
-    isAdmin,
-  };
-
-  return (
-    <GroupClientWrapper
-      groupData={groupData}
-      inviteUrl={inviteUrl}
-    />
-  );
+  return <GroupClientWrapper groupData={groupData} />;
 }
+
+// Utility functions for SelectedGroupPage
+// TODO: Move these functions to a separate file
 
 function isUserAdmin(userId: string, groupMembers: GroupMemberDto[]): boolean {
   const user = groupMembers.find((member) => member.id === userId);
@@ -64,4 +44,41 @@ function isUserMemberOfGroup(
   groupMembers: GroupMemberDto[]
 ): boolean {
   return groupMembers.some((member) => member.id === userId);
+}
+
+async function getGroupDataProps({
+  groupId,
+}: {
+  groupId: string;
+}): Promise<GroupDataProps> {
+  try {
+    const user: UserDto = await getCurrentUser();
+    const group: GroupDto = await getGroupById(groupId);
+    const members: GroupMemberDto[] = await getGroupMembers(groupId);
+
+    const games: GameDto[] = await getGamesByGroupId({ groupId });
+    const events: EventDto[] = await getEventsAndAttendanceByGroupId({
+      groupId,
+    });
+
+    const isAdmin: boolean = isUserAdmin(user.id, members);
+
+    const inviteUrl: string = await getInviteLink({
+      groupId: group.id as string,
+    });
+
+    const groupData: GroupDataProps = {
+      group,
+      members,
+      games,
+      events,
+      loggedInUser: user,
+      inviteUrl,
+      isAdmin,
+    };
+
+    return groupData;
+  } catch (error) {
+    return {} as GroupDataProps;
+  }
 }

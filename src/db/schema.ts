@@ -55,8 +55,6 @@ export const users = pgTable("user", {
 });
 
 export const userRelations = relations(users, ({ many }) => ({
-  favoriteGroups: many(userFavoriteGroups),
-  accounts: many(accounts),
   availability: many(memberAvailability),
   absences: many(memberAbsence),
 }));
@@ -73,20 +71,6 @@ export const userFavoriteGroups = pgTable(
   },
   (ufg) => ({
     compoundKey: primaryKey({ columns: [ufg.userId, ufg.groupId] }),
-  })
-);
-
-const userFavoriteGroupsRelations = relations(
-  userFavoriteGroups,
-  ({ one }) => ({
-    user: one(users, {
-      fields: [userFavoriteGroups.userId],
-      references: [users.id],
-    }),
-    group: one(groups, {
-      fields: [userFavoriteGroups.groupId],
-      references: [groups.id],
-    }),
   })
 );
 

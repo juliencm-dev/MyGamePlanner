@@ -13,12 +13,10 @@ import { DeleteGroupButton } from "@/components/groups/delete-group-button";
 
 export function GroupClientWrapper({
   groupData,
-  inviteUrl,
 }: {
   groupData: GroupDataProps;
-  inviteUrl: string;
 }) {
-  const { group, isAdmin, loggedInUser } = groupData;
+  const { group, isAdmin, loggedInUser, inviteUrl } = groupData;
   const isOwner = group.ownerId === loggedInUser.id;
 
   return (

@@ -4,6 +4,8 @@ import "@/app/globals.css";
 import { Header } from "@/components/navigation/header";
 import { Toaster } from "@/components/ui/toaster";
 import { SocketConnector } from "@/components/websocket/socket-connector";
+import { getUserGroups } from "@/data-access/group";
+import { getCurrentUser } from "@/data-access/user";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,11 +14,15 @@ export const metadata: Metadata = {
   description: "Plan your next adventure with ease.",
 };
 
-export default function ProtectedLayout({
+export default async function ProtectedLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const userGroups = await getUserGroups();
+  const userId = (await getCurrentUser()).id as string;
+  const userGroupIds = userGroups.map((group) => group.id as string);
+
   return (
     <html lang='en'>
       <body className={inter.className}>
@@ -25,7 +31,10 @@ export default function ProtectedLayout({
           {children}
         </main>
         <Toaster />
-        <SocketConnector />
+        <SocketConnector
+          userId={userId}
+          userGroupIds={userGroupIds}
+        />
       </body>
     </html>
   );

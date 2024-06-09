@@ -20,9 +20,11 @@ import { ServerResponseMessage } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { type GroupDataProps, useGroup } from "@/context/group-context";
 import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 export function LeaveGroupButton({ className }: { className?: string }) {
   const { toast } = useToast();
+  const router = useRouter();
   const { members, loggedInUser } = useGroup() as GroupDataProps;
   const [isPending, startTransition] = useTransition();
 
@@ -39,6 +41,7 @@ export function LeaveGroupButton({ className }: { className?: string }) {
               title: "Success",
               description: res.message,
             });
+            router.push("/groups");
           } else {
             toast({
               variant: "destructive",

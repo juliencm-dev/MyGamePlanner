@@ -10,6 +10,7 @@ import {
 } from "@/db/schema";
 import { GameDto, RatingDto } from "@/use-case/games/types";
 import { getImageFromBucket } from "@/db/s3";
+import { cache } from "react";
 
 export function toGameDtoMapper(games: Game[]): GameDto[] {
   return games.map((game) => {
@@ -122,32 +123,30 @@ export async function getGameById({
   }
 }
 
-export async function getGamesByGroupId({
-  groupId,
-}: {
-  groupId: string;
-}): Promise<GameDto[]> {
-  try {
-    const foundGames = await db.query.groupAvailableGames.findMany({
-      where: eq(groupAvailableGames.groupId, groupId),
-    });
+export const getGamesByGroupId = cache(
+  async ({ groupId }: { groupId: string }): Promise<GameDto[]> => {
+    try {
+      const foundGames = await db.query.groupAvailableGames.findMany({
+        where: eq(groupAvailableGames.groupId, groupId),
+      });
 
-    const foundGamesPromises = foundGames.map(async (game) => {
-      if (game.image) {
-        game.image = await getImageFromBucket({ key: game.image });
-        return game;
-      }
-    });
+      const foundGamesPromises = foundGames.map(async (game) => {
+        if (game.image) {
+          game.image = await getImageFromBucket({ key: game.image });
+          return game;
+        }
+      });
 
-    const foundGamesMappedImages = (await Promise.all(
-      foundGamesPromises
-    )) as Game[];
+      const foundGamesMappedImages = (await Promise.all(
+        foundGamesPromises
+      )) as Game[];
 
-    return toGameDtoMapper(foundGamesMappedImages);
-  } catch (error) {
-    throw new Error("Could not find games");
+      return toGameDtoMapper(foundGamesMappedImages);
+    } catch (error) {
+      throw new Error("Could not find games");
+    }
   }
-}
+);
 
 export async function getGameRatingsByGameId({
   gameId,

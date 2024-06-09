@@ -19,7 +19,9 @@ export function RemoveEvent({
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
-  function handleRemoveEvent(formData: FormData) {
+  function handleRemoveEvent() {
+    const formData = new FormData();
+    formData.append("eventId", eventId);
     startTransition(async () => {
       await removeEventAction(formData).then((res) => {
         if (res.status === 200) {
@@ -34,22 +36,20 @@ export function RemoveEvent({
             description: res.message,
           });
         }
+        setSelectedEventId("");
+        setSelectedEventName("");
       });
     });
   }
 
   return (
-    <form action={handleRemoveEvent}>
-      <Input
-        name='eventId'
-        type='hidden'
-        value={eventId}
-      />
+    <div>
       <Button
         variant={"destructive"}
+        onClick={handleRemoveEvent}
         className='w-full'>
         {isPending ? <PulseLoader size={4} /> : "Remove Event"}
       </Button>
-    </form>
+    </div>
   );
 }

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTransition } from "react";
 import { PulseLoader } from "react-spinners";
-import { toast } from "sonner";
 import { removeGameAction } from "@/app/(protected)/groups/[groupId]/_actions/remove-game";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -20,7 +19,9 @@ export function RemoveGame({
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
-  function handleRemoveGame(formData: FormData) {
+  function handleRemoveGame() {
+    const formData = new FormData();
+    formData.append("gameId", gameId);
     startTransition(async () => {
       await removeGameAction(formData).then((res) => {
         if (res.status === 200) {
@@ -35,22 +36,20 @@ export function RemoveGame({
             description: res.message,
           });
         }
+        setSelectedGameId("");
+        setSelectedGameName("");
       });
     });
   }
 
   return (
-    <form action={handleRemoveGame}>
-      <Input
-        name='gameId'
-        type='hidden'
-        value={gameId}
-      />
+    <div>
       <Button
         variant={"destructive"}
+        onClick={handleRemoveGame}
         className='w-full'>
         {isPending ? <PulseLoader size={4} /> : "Remove Game"}
       </Button>
-    </form>
+    </div>
   );
 }

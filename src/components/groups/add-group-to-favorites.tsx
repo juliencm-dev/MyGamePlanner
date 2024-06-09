@@ -18,6 +18,7 @@ export function AddGroupToFavorites({ group }: { group: GroupDto }) {
           title: "Success",
           description: res.message,
         });
+        setIsFavorite(true);
       } else {
         toast({
           variant: "destructive",
@@ -35,6 +36,7 @@ export function AddGroupToFavorites({ group }: { group: GroupDto }) {
           title: "Success",
           description: res.message,
         });
+        setIsFavorite(false);
       } else {
         toast({
           variant: "destructive",

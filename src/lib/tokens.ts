@@ -4,34 +4,33 @@ import {
 } from "@/data-access/group";
 import { GroupInviteTokenDto } from "@/use-case/groups/types";
 import { createId } from "@paralleldrive/cuid2";
+import { cache } from "react";
 
-export async function getInviteLink({
-  groupId,
-}: {
-  groupId: string;
-}): Promise<string> {
-  let inviteUrl: string;
-  try {
-    const inviteToken: GroupInviteTokenDto = await getInviteTokenByGroupId(
-      groupId
-    );
+export const getInviteLink = cache(
+  async ({ groupId }: { groupId: string }): Promise<string> => {
+    let inviteUrl: string;
+    try {
+      const inviteToken: GroupInviteTokenDto = await getInviteTokenByGroupId(
+        groupId
+      );
 
-    if (inviteToken.expires > new Date()) {
-      inviteUrl = `${process.env.APP_URL}/join?token=${inviteToken.token}`;
-    } else {
-      throw new Error("Invite token expired");
+      if (inviteToken.expires > new Date()) {
+        inviteUrl = `${process.env.APP_URL}/join?token=${inviteToken.token}`;
+      } else {
+        throw new Error("Invite token expired");
+      }
+    } catch (e) {
+      const expires = new Date();
+      expires.setDate(expires.getDate() + 7);
+      inviteUrl = await generateInviteLink({
+        groupId: groupId,
+        expires: expires,
+      });
     }
-  } catch (e) {
-    const expires = new Date();
-    expires.setDate(expires.getDate() + 7);
-    inviteUrl = await generateInviteLink({
-      groupId: groupId,
-      expires: expires,
-    });
-  }
 
-  return inviteUrl;
-}
+    return inviteUrl;
+  }
+);
 
 export async function generateInviteLink({
   groupId,

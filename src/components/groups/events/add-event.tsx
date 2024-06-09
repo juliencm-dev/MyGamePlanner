@@ -14,14 +14,17 @@ import { AvailablePlayersProps, DatePicker } from "@/components/ui/date-picker";
 import { type GroupDataProps, useGroup } from "@/context/group-context";
 import { getAvailablePlayerProps } from "@/lib/availabilities/utils";
 import { useToast } from "@/components/ui/use-toast";
+import { socket } from "@/components/websocket/socket";
 
 export function AddEvent({ children }: { children: React.ReactNode }) {
   const { toast } = useToast();
-  const { group, members, games } = useGroup() as GroupDataProps;
+  const { group, members, games, loggedInUser } = useGroup() as GroupDataProps;
+
+  const nameRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
 
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
@@ -41,8 +44,25 @@ export function AddEvent({ children }: { children: React.ReactNode }) {
     minPLayers: games.find((g) => selectedGameId === g.id)?.minPlayers || 0,
   });
 
-  function handleAddEvent(formData: FormData) {
+  function resetEventForm() {
+    nameRef.current!.value = "";
+    descriptionRef.current!.value = "";
+    setSelectedGameId("");
+    setSelectedGameName("");
+    setSelectedMemberId("");
+    setSelectedMemberName("");
+    setMpChecked(false);
+    setRecurringChecked(false);
+  }
+
+  function handleAddEvent() {
+    const formData = new FormData();
+
+    formData.append("name", nameRef.current?.value as string);
+    formData.append("description", descriptionRef.current?.value as string);
     formData.append("gameId", selectedGameId);
+    formData.append("mandatoryPlayerId", selectedMemberId);
+    formData.append("groupId", group.id as string);
 
     if (!startDate || !endDate) {
       toast({
@@ -54,23 +74,33 @@ export function AddEvent({ children }: { children: React.ReactNode }) {
     }
 
     startTransition(async () => {
-      await addEventAction({ formData, startDate, endDate, members }).then(
-        (res) => {
-          if (res.status === 200) {
-            toast({
-              title: "Success",
-              description: res.message,
-            });
-            setOpen(false);
-          } else {
-            toast({
-              variant: "destructive",
-              title: "Error",
-              description: res.message,
-            });
+      await addEventAction({
+        formData,
+        startDate,
+        endDate,
+        members,
+        user: loggedInUser,
+      }).then((res) => {
+        if (res.status === 200) {
+          toast({
+            title: "Success",
+            description: res.message,
+          });
+
+          if (res.notification) {
+            socket.emit("notification", res.notification);
           }
+
+          setOpen(false);
+          resetEventForm();
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: res.message,
+          });
         }
-      );
+      });
     });
   }
 
@@ -86,10 +116,7 @@ export function AddEvent({ children }: { children: React.ReactNode }) {
       }}>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent side='right'>
-        <form
-          action={handleAddEvent}
-          className='grid gap-4 px-2 mt-12'
-          ref={formRef}>
+        <div className='grid gap-4 px-2 mt-12'>
           <h2 className='text-lg font-semibold'>Add Event</h2>
           <p className='text-sm font-light'>
             Add an event to the group calendar. All group members will be able
@@ -97,13 +124,9 @@ export function AddEvent({ children }: { children: React.ReactNode }) {
             event.
           </p>
           <div className='flex flex-col gap-4 mt-6'>
-            <Input
-              name='groupId'
-              type='hidden'
-              value={group.id}
-            />
             <Label>Name</Label>
             <Input
+              ref={nameRef}
               name='name'
               type='text'
               required
@@ -112,6 +135,7 @@ export function AddEvent({ children }: { children: React.ReactNode }) {
           <div className='flex flex-col gap-4'>
             <Label>Description</Label>
             <Textarea
+              ref={descriptionRef}
               name='description'
               maxLength={288}
               className='h-48 resize-none'
@@ -175,10 +199,12 @@ export function AddEvent({ children }: { children: React.ReactNode }) {
               <Label className='self-center'>Recurring Event </Label>
             </div>
           </fieldset>
-          <Button className='mt-5'>
+          <Button
+            onClick={handleAddEvent}
+            className='mt-5'>
             {isPending ? <PulseLoader size={4} /> : "Add Event"}
           </Button>
-        </form>
+        </div>
       </SheetContent>
     </Sheet>
   );

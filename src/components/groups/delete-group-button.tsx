@@ -25,6 +25,7 @@ export function DeleteGroupButton({ className }: { className?: string }) {
   const { group } = useGroup() as GroupDataProps;
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const router = useRouter();
 
   function handleLeaveGroup() {
     startTransition(async () => {
@@ -34,6 +35,7 @@ export function DeleteGroupButton({ className }: { className?: string }) {
             title: "Success",
             description: res.message,
           });
+          router.push("/groups");
         } else {
           toast({
             variant: "destructive",

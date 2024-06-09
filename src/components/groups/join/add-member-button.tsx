@@ -11,7 +11,7 @@ import { socket } from "@/components/websocket/socket";
 export type NotificationProps = {
   message: any;
   sender: string;
-  receiver: string;
+  receivers: string[];
   target: string;
 };
 
@@ -39,7 +39,7 @@ export function AddMemberButton({
       }
     });
 
-    router.push("/groups");
+    router.push(`/groups/${groupId}`);
   }
 
   return (

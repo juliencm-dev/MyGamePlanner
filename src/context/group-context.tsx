@@ -2,15 +2,15 @@ import React, { createContext, useContext } from "react";
 import { EventDto } from "@/use-case/events/types";
 import { GameDto } from "@/use-case/games/types";
 import { GroupDto, GroupMemberDto } from "@/use-case/groups/types";
-import { UserAvailabilityDto, UserDto } from "@/use-case/users/types";
+import { UserDto } from "@/use-case/users/types";
 
 export type GroupDataProps = {
   group: GroupDto;
   members: GroupMemberDto[];
-  memberAvailabilities: UserAvailabilityDto[];
   games: GameDto[];
   events: EventDto[];
   loggedInUser: UserDto;
+  inviteUrl: string;
   isAdmin: boolean;
 };
 

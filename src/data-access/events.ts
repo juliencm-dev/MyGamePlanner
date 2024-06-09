@@ -20,6 +20,7 @@ import { getUserGroups } from "./group";
 import { GroupDto } from "@/use-case/groups/types";
 import { auth } from "@/auth";
 import { group } from "console";
+import { cache } from "react";
 
 export function toEventDtoMapper(events: EventWithRelations[]): EventDto[] {
   return events.map((event) => {
@@ -162,26 +163,26 @@ export async function getUserEvents(): Promise<EventDto[]> {
   }
 }
 
-export async function getEventsAndAttendanceByGroupId({
-  groupId,
-}: {
-  groupId: string;
-}): Promise<EventDto[]> {
-  try {
-    const events: EventWithRelations[] = (await db.query.groupEvents.findMany({
-      where: eq(groupEvents.groupId, groupId),
-      with: { game: true, mandatoryPlayer: true, confirmations: true },
-    })) as EventWithRelations[];
+export const getEventsAndAttendanceByGroupId = cache(
+  async ({ groupId }: { groupId: string }): Promise<EventDto[]> => {
+    try {
+      const events: EventWithRelations[] = (await db.query.groupEvents.findMany(
+        {
+          where: eq(groupEvents.groupId, groupId),
+          with: { game: true, mandatoryPlayer: true, confirmations: true },
+        }
+      )) as EventWithRelations[];
 
-    if (!events) {
-      return [];
+      if (!events) {
+        return [];
+      }
+
+      return toEventDtoMapper(events);
+    } catch (error) {
+      throw new Error("Could not get events");
     }
-
-    return toEventDtoMapper(events);
-  } catch (error) {
-    throw new Error("Could not get events");
   }
-}
+);
 
 export async function getAttendanceByEventId({
   eventId,
@@ -197,6 +198,35 @@ export async function getAttendanceByEventId({
     return toEventConfirmationDtoMapper(confirmations);
   } catch (error) {
     throw new Error("Could not get attendance");
+  }
+}
+
+export async function removeAttendanceByGroupAndUserId({
+  groupId,
+  userId,
+}: {
+  groupId: string;
+  userId: string;
+}) {
+  try {
+    const events: Event[] = await db.query.groupEvents.findMany({
+      where: eq(groupEvents.groupId, groupId),
+    });
+
+    const eventIds: string[] = events.map((event) => event.id);
+
+    eventIds.forEach(async (eventId) => {
+      await db
+        .delete(groupEventsConfirmation)
+        .where(
+          and(
+            eq(groupEventsConfirmation.userId, userId),
+            eq(groupEventsConfirmation.eventId, eventId)
+          )
+        );
+    });
+  } catch (error) {
+    throw new Error("Could not remove attendance");
   }
 }
 

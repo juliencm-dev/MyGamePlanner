@@ -4,7 +4,6 @@ import { and, eq } from "drizzle-orm";
 import { db } from "@/db/db";
 import {
   users,
-  User,
   Group,
   userFavoriteGroups,
   groups,
@@ -15,7 +14,13 @@ import {
 import { UserAvailabilityDto, UserDto } from "@/use-case/users/types";
 import { toGroupDtoMapper } from "@/data-access/group";
 import { auth } from "@/auth";
+import { cache } from "react";
 
+/**
+ * Maps an array of UserWithRelations objects to an array of UserDto objects.
+ * @param users - The array of UserWithRelations objects to be mapped.
+ * @returns An array of UserDto objects.
+ */
 export function toUserDtoMapper(users: UserWithRelations[]): UserDto[] {
   return users.map((user) => {
     return {
@@ -32,6 +37,11 @@ export function toUserDtoMapper(users: UserWithRelations[]): UserDto[] {
   });
 }
 
+/**
+ * Maps an array of Availability objects to an array of UserAvailabilityDto objects.
+ * @param availabilities - The array of Availability objects to be mapped.
+ * @returns An array of UserAvailabilityDto objects.
+ */
 export function toUserAvailabilityDtoMapper(
   availabilities: Availability[]
 ): UserAvailabilityDto[] {
@@ -45,6 +55,12 @@ export function toUserAvailabilityDtoMapper(
   });
 }
 
+/**
+ * Maps an array of UserAvailabilityDto objects to an array of Availability objects.
+ * @param availabilities - The array of UserAvailabilityDto objects to be mapped.
+ * @param userId - The ID of the user.
+ * @returns An array of Availability objects.
+ */
 export function toAvailabilityMapper(
   availabilities: UserAvailabilityDto[],
   userId: string
@@ -59,7 +75,14 @@ export function toAvailabilityMapper(
   });
 }
 
-export async function getCurrentUser(): Promise<UserDto> {
+/**
+ * Retrieves the current authenticated user.
+ * @returns A Promise that resolves to a UserDto object representing the current user.
+ * @throws An error if the user is not authenticated or if the user cannot be found.
+ *
+ * Return of this function is cached for 30 minutes.
+ */
+export const getCurrentUser = cache(async (): Promise<UserDto> => {
   const { getUser } = await auth();
   const user = getUser();
 
@@ -80,8 +103,13 @@ export async function getCurrentUser(): Promise<UserDto> {
   }
 
   return toUserDtoMapper([foundUser])[0];
-}
+});
 
+/**
+ * Adds a group to the user's favorite groups.
+ * @param groupId - The ID of the group to be added.
+ * @throws An error if the user is not authenticated or if the group cannot be added to favorites.
+ */
 export async function addUserFavoriteGroup({ groupId }: { groupId: string }) {
   const { getUser } = await auth();
   const user = getUser();
@@ -100,6 +128,11 @@ export async function addUserFavoriteGroup({ groupId }: { groupId: string }) {
   }
 }
 
+/**
+ * Removes a group from the user's favorite groups.
+ * @param groupId - The ID of the group to be removed.
+ * @throws An error if the user is not authenticated or if the group cannot be removed from favorites.
+ */
 export async function removeUserFavoriteGroup({
   groupId,
 }: {
@@ -126,6 +159,38 @@ export async function removeUserFavoriteGroup({
   }
 }
 
+/**
+ * Removes a group from the user's favorite groups by user ID and group ID.
+ * @param groupId - The ID of the group to be removed.
+ * @param userId - The ID of the user.
+ * @throws An error if the group cannot be removed from favorites.
+ */
+export async function removeUserFavoriteGroupByUserId({
+  groupId,
+  userId,
+}: {
+  groupId: string;
+  userId: string;
+}) {
+  try {
+    await db
+      .delete(userFavoriteGroups)
+      .where(
+        and(
+          eq(userFavoriteGroups.groupId, groupId),
+          eq(userFavoriteGroups.userId, userId)
+        )
+      );
+  } catch (error) {
+    throw new Error("Failed to remove group from favorites");
+  }
+}
+
+/**
+ * Retrieves the user's favorite groups.
+ * @returns A Promise that resolves to an array of GroupDto objects representing the user's favorite groups.
+ * @throws An error if the user is not authenticated or if there is an error retrieving the favorite groups.
+ */
 export async function getUserFavoriteGroups() {
   const { getUser } = await auth();
   const user = getUser();
@@ -157,6 +222,11 @@ export async function getUserFavoriteGroups() {
   }
 }
 
+/**
+ * Creates user availabilities.
+ * @param availabilitiesDto - An array of UserAvailabilityDto objects representing the user's availabilities.
+ * @throws An error if the user is not authenticated or if there is an error creating the availabilities.
+ */
 export async function createUserAvailabilities(
   availabilitiesDto: UserAvailabilityDto[]
 ) {

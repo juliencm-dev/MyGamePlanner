@@ -17,6 +17,8 @@ import {
 import { useTransition } from "react";
 import { type GroupMemberDto } from "@/use-case/groups/types";
 import { removeMemberAction } from "@/app/(protected)/groups/[groupId]/_actions/remove-member";
+import { group } from "console";
+import { socket } from "@/components/websocket/socket";
 
 export function RemoveMemberButton({
   groupMemberDto,
@@ -40,6 +42,11 @@ export function RemoveMemberButton({
             toast({
               title: "Success",
               description: res.message,
+            });
+
+            socket.emit("removeFromGroup", {
+              groupId: groupMemberDto.groupId,
+              userId: groupMemberDto.id,
             });
           } else {
             toast({

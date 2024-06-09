@@ -4,15 +4,12 @@ import { and, eq } from "drizzle-orm";
 import { db } from "@/db/db";
 import {
   Group,
-  GroupMember,
   GroupMemberWithRelations,
   InviteToken,
-  User,
   groupInviteTokens,
   groupMembers,
   groups,
   userFavoriteGroups,
-  users,
 } from "@/db/schema";
 
 import {
@@ -22,8 +19,15 @@ import {
   UpdateMemberDto,
 } from "@/use-case/groups/types";
 import { auth } from "@/auth";
-import { updateAttendanceByGroupId } from "./events";
-import { toUserAvailabilityDtoMapper } from "./user";
+import {
+  removeAttendanceByGroupAndUserId,
+  updateAttendanceByGroupId,
+} from "./events";
+import {
+  removeUserFavoriteGroupByUserId,
+  toUserAvailabilityDtoMapper,
+} from "./user";
+import { cache } from "react";
 
 export function tokenMapper(inviteToken: InviteToken) {
   return {
@@ -111,11 +115,18 @@ export async function addMemberToGroup(groupId: string, userId: string) {
 }
 
 export async function removeMemberFromGroup(groupId: string, userId: string) {
-  return await db
-    .delete(groupMembers)
-    .where(
-      and(eq(groupMembers.groupId, groupId), eq(groupMembers.userId, userId))
-    );
+  try {
+    await db
+      .delete(groupMembers)
+      .where(
+        and(eq(groupMembers.groupId, groupId), eq(groupMembers.userId, userId))
+      );
+
+    await removeUserFavoriteGroupByUserId({ groupId, userId });
+    await removeAttendanceByGroupAndUserId({ groupId, userId });
+  } catch (error) {
+    throw new Error("Could not remove member from group");
+  }
 }
 
 export async function updateMemberRole(member: UpdateMemberDto) {
@@ -174,35 +185,37 @@ export async function getUserGroups(): Promise<GroupDto[]> {
   return toGroupDtoMapper(foundGroups as unknown as Group[], isFavourited);
 }
 
-export async function getGroupMembers(
-  groupId: string
-): Promise<GroupMemberDto[]> {
-  const foundMembers = await db.query.groupMembers.findMany({
-    where: eq(groupMembers.groupId, groupId),
-    with: {
-      user: {
-        with: {
-          availability: true,
-          absences: true,
+export const getGroupMembers = cache(
+  async (groupId: string): Promise<GroupMemberDto[]> => {
+    const foundMembers = await db.query.groupMembers.findMany({
+      where: eq(groupMembers.groupId, groupId),
+      with: {
+        user: {
+          with: {
+            availability: true,
+            absences: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  if (!foundMembers) throw new Error("Could not find group with that id");
+    if (!foundMembers) throw new Error("Could not find group with that id");
 
-  return toGroupMemberDtoMapper(foundMembers);
-}
+    return toGroupMemberDtoMapper(foundMembers);
+  }
+);
 
-export async function getGroupById(groupId: string): Promise<GroupDto> {
-  const foundGroup = await db.query.groups.findFirst({
-    where: eq(groups.id, groupId),
-  });
+export const getGroupById = cache(
+  async (groupId: string): Promise<GroupDto> => {
+    const foundGroup = await db.query.groups.findFirst({
+      where: eq(groups.id, groupId),
+    });
 
-  if (!foundGroup) throw new Error("Could not find group with that id");
+    if (!foundGroup) throw new Error("Could not find group with that id");
 
-  return toGroupDtoMapper([foundGroup])[0];
-}
+    return toGroupDtoMapper([foundGroup])[0];
+  }
+);
 
 //
 // Token Logic for Group Invite

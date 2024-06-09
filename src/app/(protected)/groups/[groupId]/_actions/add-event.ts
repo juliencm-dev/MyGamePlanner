@@ -1,9 +1,11 @@
 "use server";
 
+import { NotificationProps } from "@/components/groups/join/add-member-button";
 import { createEvent } from "@/data-access/events";
 import { ServerResponseMessage } from "@/lib/types";
 import { EventConfirmationDto, EventDto } from "@/use-case/events/types";
 import { GroupMemberDto } from "@/use-case/groups/types";
+import { UserDto } from "@/use-case/users/types";
 import { revalidatePath } from "next/cache";
 
 export async function addEventAction({
@@ -11,11 +13,13 @@ export async function addEventAction({
   startDate,
   endDate,
   members,
+  user,
 }: {
   formData: FormData;
   startDate: Date;
   endDate: Date;
   members: GroupMemberDto[];
+  user: UserDto;
 }): Promise<ServerResponseMessage> {
   const newEvent = {
     name: formData.get("name") as string,
@@ -35,11 +39,22 @@ export async function addEventAction({
   });
 
   try {
-    const eventId = await createEvent({ newEvent, attendance });
+    await createEvent({ newEvent, attendance });
 
     revalidatePath(`/groups/${newEvent.groupId}`);
 
-    return { message: "Event created successfully", status: 200 };
+    const receiverIds = members.map((member) => member.id);
+
+    return {
+      message: "Event created successfully",
+      notification: {
+        message: `${user.name} has created a new event : ${newEvent.name}`,
+        sender: user.id,
+        receivers: receiverIds,
+        target: newEvent.groupId,
+      } as NotificationProps,
+      status: 200,
+    };
   } catch (e) {
     return { message: "Failed to create event", status: 500 };
   }
