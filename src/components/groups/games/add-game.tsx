@@ -75,8 +75,8 @@ export function AddGame({ children }: { children: React.ReactNode }) {
         <div className='grid gap-4 px-2 mt-12'>
           <h2 className='text-lg font-semibold'>Add Game</h2>
           <p className='text-sm font-light'>
-            Add a game to the group librairy. You can rate it and add it to use
-            it to create events to add to your group's calendar.
+            {`Add a game to the group librairy. You can rate it and add it to use
+            it to create events to add to your group's calendar.`}
           </p>
           <div className='flex flex-col gap-4 mt-6'>
             <Label>Name *</Label>

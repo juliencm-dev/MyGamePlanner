@@ -1,4 +1,7 @@
-import { UserAbsenceDto, UserAvailabilityDto } from "@/dto/users/types";
+import {
+  type UserAbsenceDto,
+  type UserAvailabilityDto,
+} from "@/db/data-access/dto/users/types";
 
 export type GroupDto = {
   id?: string;

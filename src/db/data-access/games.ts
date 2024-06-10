@@ -8,7 +8,7 @@ import {
   groupAvailableGames,
   groupGameRating,
 } from "@/db/schema";
-import { GameDto, RatingDto } from "@/dto/games/types";
+import { type GameDto, type RatingDto } from "@/db/data-access/dto/games/types";
 import { getImageFromBucket } from "@/db/s3";
 import { cache } from "react";
 import {

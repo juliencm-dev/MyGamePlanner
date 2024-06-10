@@ -43,11 +43,14 @@ export function RemoveMemberButton({
               description: res.message,
             });
 
-            socket.emit("removeFromGroup", {
+            socket.emit("leaveGroup", {
               groupId: groupMemberDto.groupId,
               userId: groupMemberDto.id,
             });
-            socket.emit("groupUpdate", { target: groupMemberDto.groupId });
+
+            socket.emit("removeFromGroup", {
+              userId: groupMemberDto.id,
+            });
           } else {
             toast({
               variant: "destructive",

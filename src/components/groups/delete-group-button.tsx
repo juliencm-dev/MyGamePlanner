@@ -66,8 +66,9 @@ export function DeleteGroupButton({ className }: { className?: string }) {
             Are you sure you want to delete this group?
           </AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. You will lose all data related to the
-            group's games, events, and members.
+            {
+              "This action cannot be undone. You will lose all data related to the group's games, events, and members."
+            }
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

@@ -42,7 +42,7 @@ export function LeaveGroupButton({ className }: { className?: string }) {
               title: "Success",
               description: res.message,
             });
-            socket.emit("removeFromGroup", {
+            socket.emit("leaveGroup", {
               groupId: groupMember.groupId,
               userId: groupMember.id,
             });
@@ -77,8 +77,8 @@ export function LeaveGroupButton({ className }: { className?: string }) {
             Are you sure you want to leave the group?
           </AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. You will lose access to the group's
-            games, events, and members.
+            {`This action cannot be undone. You will lose access to the group's
+            games, events, and members.`}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

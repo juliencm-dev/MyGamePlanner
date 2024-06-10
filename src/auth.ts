@@ -9,6 +9,7 @@ import { AuthOptions, DefaultSession, getServerSession } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import DiscordProvider from "next-auth/providers/discord";
 import { unstable_noStore } from "next/cache";
+import { Adapter } from "next-auth/adapters";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
@@ -20,9 +21,7 @@ declare module "next-auth" {
 }
 
 export const authConfig = {
-  adapter: DrizzleAdapter(
-    db
-  ) as import("c:/Users/jcoul/Desktop/DungeonGamePlanner/dungeon-game-planner/node_modules/next-auth/adapters").Adapter,
+  adapter: DrizzleAdapter(db) as Adapter,
   session: {
     strategy: "jwt",
   },

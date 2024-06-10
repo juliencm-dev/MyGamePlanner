@@ -68,8 +68,8 @@ export function AddUserAbsences() {
             ref={formRef}>
             <h2 className='text-lg font-semibold'>Add Absense</h2>
             <p className='text-sm font-light'>
-              Add an absense to the user's profile. You can add a reason and
-              specify the start and end date of the absense.
+              {`Add an absense to the user's profile. You can add a reason and
+              specify the start and end date of the absense.`}
             </p>
             <div className='flex flex-col gap-4 mt-6'>
               <Label>Reason for absense</Label>
