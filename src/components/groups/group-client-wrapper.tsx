@@ -37,7 +37,7 @@ export function GroupClientWrapper({
             </div>
           </div>
           {isOwner && <DeleteGroupButton />}
-          {!isAdmin && <LeaveGroupButton />}
+          {!isOwner && <LeaveGroupButton />}
         </div>
         <div className='grid grid-cols-[1fr_1fr_1fr] grid-rows-[2fr_1fr] gap-10'>
           <ManageMembers />
