@@ -3,7 +3,7 @@
 import {
   addUserFavoriteGroup,
   getUserFavoriteGroups,
-} from "@/db/data-access/user";
+} from "@/db/data-access/users";
 import { type ServerResponseMessage } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 

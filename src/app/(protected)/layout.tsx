@@ -5,7 +5,7 @@ import { Header } from "@/components/navigation/header";
 import { Toaster } from "@/components/ui/toaster";
 import { SocketConnector } from "@/components/websocket/socket-connector";
 import { getUserGroups } from "@/db/data-access/groups";
-import { getCurrentUser } from "@/db/data-access/user";
+import { getCurrentUser } from "@/db/data-access/users";
 
 const inter = Inter({ subsets: ["latin"] });
 

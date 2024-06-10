@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import { auth } from "@/auth";
-import { getCurrentUser } from "@/db/data-access/user";
+import { getCurrentUser } from "@/db/data-access/users";
 import { type UserDto } from "@/db/data-access/dto/users/types";
 import { SignOutButton } from "@/components/signout-button";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";

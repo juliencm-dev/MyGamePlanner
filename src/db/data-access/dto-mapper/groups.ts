@@ -8,7 +8,7 @@ import {
   type GroupInviteTokenDto,
   type GroupMemberDto,
 } from "@/db/data-access/dto/groups/types";
-import { toUserAvailabilityDtoMapper } from "@/db/data-access/dto-mapper/user";
+import { toUserAvailabilityDtoMapper } from "@/db/data-access/dto-mapper/users";
 
 export function tokenMapper(inviteToken: InviteToken) {
   return {

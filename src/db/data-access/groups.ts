@@ -22,14 +22,14 @@ import {
   removeAttendanceByGroupAndUserId,
   updateAttendanceByGroupId,
 } from "@/db/data-access/events";
-import { removeUserFavoriteGroupByUserId } from "@/db/data-access/user";
+import { removeUserFavoriteGroupByUserId } from "@/db/data-access/users";
 import { cache } from "react";
 import {
   toGroupDtoMapper,
   toGroupMapper,
   toGroupMemberDtoMapper,
   tokenMapper,
-} from "@/db/data-access/dto-mapper/group";
+} from "@/db/data-access/dto-mapper/groups";
 
 export async function createGroup(newGroup: GroupDto) {
   const group = toGroupMapper(newGroup);

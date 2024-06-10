@@ -9,7 +9,7 @@ import { type EventDto } from "@/db/data-access/dto/events/types";
 
 import { getGroupById, getGroupMembers } from "@/db/data-access/groups";
 import { getGamesByGroupId } from "@/db/data-access/games";
-import { getCurrentUser } from "@/db/data-access/user";
+import { getCurrentUser } from "@/db/data-access/users";
 import { getEventsAndAttendanceByGroupId } from "@/db/data-access/events";
 import { getInviteLink } from "@/lib/tokens";
 

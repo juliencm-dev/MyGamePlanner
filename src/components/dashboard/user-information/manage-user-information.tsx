@@ -3,7 +3,7 @@ import { AvatarChangeButton } from "@/components/dashboard/user-information/avat
 import { UpdateUserInformation } from "@/components/dashboard/user-information/update-user-information";
 import { Label } from "@/components/ui/label";
 import { type UserDto } from "@/db/data-access/dto/users/types";
-import { getCurrentUser } from "@/db/data-access/user";
+import { getCurrentUser } from "@/db/data-access/users";
 
 export async function ManageUserInformation() {
   const userDto: UserDto = await getCurrentUser();

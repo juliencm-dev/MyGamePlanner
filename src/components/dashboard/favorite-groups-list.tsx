@@ -2,7 +2,7 @@ import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { Label } from "@/components/ui/label";
 import { type GroupDto } from "@/db/data-access/dto/groups/types";
 import { GroupCard } from "@/components/groups/group-card";
-import { getUserFavoriteGroups } from "@/db/data-access/user";
+import { getUserFavoriteGroups } from "@/db/data-access/users";
 
 export async function UserFavoriteGroupsList() {
   const favoriteGroups: GroupDto[] = await getUserFavoriteGroups();

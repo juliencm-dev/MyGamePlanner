@@ -10,13 +10,13 @@ import {
   memberAvailability,
 } from "@/db/schema";
 import { UserAvailabilityDto, UserDto } from "@/db/data-access/dto/users/types";
-import { toGroupDtoMapper } from "@/db/data-access/dto-mapper/group";
+import { toGroupDtoMapper } from "@/db/data-access/dto-mapper/groups";
 import { auth } from "@/auth";
 import { cache } from "react";
 import {
   toAvailabilityMapper,
   toUserDtoMapper,
-} from "@/db/data-access/dto-mapper/user";
+} from "@/db/data-access/dto-mapper/users";
 
 /**
  * Retrieves the current authenticated user.
