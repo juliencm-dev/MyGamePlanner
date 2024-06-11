@@ -7,10 +7,10 @@ import { type RatingDto } from "@/db/data-access/dto/games/types";
 export async function addGameRatingAction(
   rating: RatingDto
 ): Promise<ServerResponseMessage> {
-  const res = await addGameRating(rating);
-  if (!res) {
-    return { message: "Failed to add rating to game", status: 500 };
+  try {
+    await addGameRating(rating);
+    return { message: "Game rating added successfully", status: 200 };
+  } catch (e) {
+    return { message: "You have already rated this game", status: 500 };
   }
-
-  return { message: "Game rating added successfully", status: 200 };
 }

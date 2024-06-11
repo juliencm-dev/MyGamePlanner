@@ -4,22 +4,21 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 
 const app = express();
-const port = 3001;
+const port = 8000;
 
-app.use(cors({
-  origin: 'http://localhost:3000',
-  methods: ['GET', 'POST']
-}));
+const userSocketMap = new Map();
+
+const corsOptions = {
+    origin: process.env.NODE_ENV === 'production' ? ['https://mygameplanner.xyz', 'https://www.mygameplanner.xyz'] : 'http://localhost:3000',
+    methods: ['GET', 'POST']
+  };
+
+app.use(cors(corsOptions));
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
-  cors: {
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST']
-  }
+  cors: corsOptions
 });
-
-const userSocketMap = new Map();
 
 io.on("connection", (socket) => {
 

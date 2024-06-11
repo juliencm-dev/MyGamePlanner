@@ -6,6 +6,11 @@ import { type GroupInviteTokenDto } from "@/db/data-access/dto/groups/types";
 import { createId } from "@paralleldrive/cuid2";
 import { cache } from "react";
 
+const appUrl =
+  process.env.NODE_ENV === "production"
+    ? process.env.APP_URL_PROD
+    : process.env.APP_URL;
+
 export const getInviteLink = cache(
   async ({ groupId }: { groupId: string }): Promise<string> => {
     let inviteUrl: string;
@@ -15,7 +20,7 @@ export const getInviteLink = cache(
       );
 
       if (inviteToken.expires > new Date()) {
-        inviteUrl = `${process.env.APP_URL}/join?token=${inviteToken.token}`;
+        inviteUrl = `${appUrl}/join?token=${inviteToken.token}`;
       } else {
         throw new Error("Invite token expired");
       }
@@ -47,7 +52,7 @@ export async function generateInviteLink({
     throw new Error("Could not create invite token");
   }
 
-  const inviteUrl = `${process.env.APP_URL}/join?token=${token}`;
+  const inviteUrl = `${appUrl}/join?token=${token}`;
 
   return inviteUrl;
 }

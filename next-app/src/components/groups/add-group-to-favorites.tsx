@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
 export function AddGroupToFavorites({ group }: { group: GroupDto }) {
-  const [isFavorite, setIsFavorite] = useState(group.isFavourite);
+  const [isFavorite, setIsFavorite] = useState(group.isFavourite || false);
   const { toast } = useToast();
 
   async function handleAddFavorite() {

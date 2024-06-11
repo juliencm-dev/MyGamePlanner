@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  mygameplanner-ws:
+    container_name: mygameplanner-ws
+    image: ghcr.io/juliencm-dev/mygameplanner-ws:latest
+    restart: always
+    ports:
+      - "3002:8000"
+    environment:
+      - NODE_ENV=production
+
+  mygameplanner-app:
+    container_name: mygameplanner-app
+    image: ghcr.io/juliencm-dev/mygameplanner:latest
+    restart: always
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - mygameplanner-ws
+

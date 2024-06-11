@@ -20,6 +20,7 @@ export async function createGroupeAction(
     name: formData.get("name") as string,
     description: formData.get("description") as string,
     ownerId: userId,
+    isFavourite: false,
   };
 
   try {

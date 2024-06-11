@@ -55,6 +55,8 @@ export const authConfig = {
         throw new Error("no user with email found");
       }
 
+      // Add refresh token strategy to the web token. This is used to be able to invalidate a user's session.
+
       return {
         id: dbUser.id,
         name: dbUser.name,

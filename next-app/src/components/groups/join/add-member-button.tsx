@@ -36,6 +36,7 @@ export function AddMemberButton({
 
       if (res.notification) {
         socket.emit("notification", res.notification);
+        socket.emit("joinGroup", groupId);
       }
     });
 
