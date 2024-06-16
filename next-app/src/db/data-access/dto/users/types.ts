@@ -22,3 +22,8 @@ export type UserAbsenceDto = {
   startDate: Date;
   endDate: Date;
 };
+
+export type UserDetails = {
+  displayName?: string;
+  aboutMe?: string;
+};

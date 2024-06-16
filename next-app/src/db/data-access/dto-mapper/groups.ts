@@ -1,14 +1,6 @@
-import {
-  type Group,
-  type GroupMemberWithRelations,
-  type InviteToken,
-} from "@/db/schema";
-import {
-  type GroupDto,
-  type GroupInviteTokenDto,
-  type GroupMemberDto,
-} from "@/db/data-access/dto/groups/types";
-import { toUserAvailabilityDtoMapper } from "@/db/data-access/dto-mapper/users";
+import { type Group, type GroupMemberWithRelations, type InviteToken } from "@/db/schema";
+import { type GroupDto, type GroupInviteTokenDto, type GroupMemberDto } from "@/db/data-access/dto/groups/types";
+import { processUserAvatarImage, toUserAvailabilityDtoMapper } from "@/db/data-access/dto-mapper/users";
 
 export function tokenMapper(inviteToken: InviteToken) {
   return {
@@ -24,10 +16,7 @@ export function tokenMapper(inviteToken: InviteToken) {
  * @param isFavourite - An optional array of booleans indicating whether each group is a favorite.
  * @returns An array of GroupDto objects.
  */
-export function toGroupDtoMapper(
-  groups: Group[],
-  isFavourite?: boolean[]
-): GroupDto[] {
+export function toGroupDtoMapper(groups: Group[], isFavourite?: boolean[]): GroupDto[] {
   return groups.map((group, idx) => {
     return {
       id: group.id,
@@ -40,20 +29,20 @@ export function toGroupDtoMapper(
   });
 }
 
-export function toGroupMemberDtoMapper(
-  groupMembers: GroupMemberWithRelations[]
-): GroupMemberDto[] {
-  return groupMembers.map((member) => {
-    return {
-      name: member.user.name,
-      role: member.role,
-      image: member.user.image,
-      id: member.userId,
-      groupId: member.groupId,
-      availability: toUserAvailabilityDtoMapper(member.user.availability || []),
-      absences: member.user.absences || [],
-    } as GroupMemberDto;
-  });
+export async function toGroupMemberDtoMapper(groupMembers: GroupMemberWithRelations[]): Promise<GroupMemberDto[]> {
+  return await Promise.all(
+    groupMembers.map(async member => {
+      return {
+        name: member.user.displayName ?? member.user.name,
+        role: member.role,
+        image: await processUserAvatarImage({ imageString: member.user.image || undefined }),
+        id: member.userId,
+        groupId: member.groupId,
+        availability: toUserAvailabilityDtoMapper(member.user.availability || []),
+        absences: member.user.absences || [],
+      } as GroupMemberDto;
+    })
+  );
 }
 
 export function toGroupMapper(group: GroupDto): Group {

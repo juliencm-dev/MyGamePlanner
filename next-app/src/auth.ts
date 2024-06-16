@@ -1,10 +1,6 @@
 import { db } from "./db/db";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import type {
-  GetServerSidePropsContext,
-  NextApiRequest,
-  NextApiResponse,
-} from "next";
+import type { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next";
 import { AuthOptions, DefaultSession, getServerSession } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import DiscordProvider from "next-auth/providers/discord";
@@ -24,6 +20,13 @@ export const authConfig = {
   adapter: DrizzleAdapter(db) as Adapter,
   session: {
     strategy: "jwt",
+  },
+  debug: true,
+  logger: {
+    error: console.error,
+    warn: console.warn,
+    info: console.log,
+    debug: console.log,
   },
   secret: process.env.AUTH_SECRET as string,
   pages: {
@@ -80,12 +83,7 @@ export const authConfig = {
 } satisfies AuthOptions;
 
 // Use it in server contexts
-export async function auth(
-  ...args:
-    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
-    | [NextApiRequest, NextApiResponse]
-    | []
-) {
+export async function auth(...args: [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]] | [NextApiRequest, NextApiResponse] | []) {
   unstable_noStore();
   const session = await getServerSession(...args, authConfig);
 
