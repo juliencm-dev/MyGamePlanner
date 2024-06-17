@@ -18,16 +18,14 @@ export async function updateUserAvatarAction(formData: FormData): Promise<Server
       };
     }
 
-    const imgBuffer = await processImageFile({
-      file: imgFile,
-      height: 200,
-    });
+    const arrayBuffer = await imgFile.arrayBuffer();
+    const imgbuffer = Buffer.from(arrayBuffer);
 
     const imageKey = `uaImg-${createId()}`;
 
     await addImageToBucket({
       key: imageKey,
-      image: imgBuffer,
+      image: imgbuffer,
       contentType: fileContentType as S3AllowedContentTypes,
     });
 

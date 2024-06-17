@@ -21,13 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "src/websocket-server/server.js",
-    "src/components/websocket/socket-connector.js"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/websocket-server/server.js", "src/components/websocket/socket-connector.js"],
   "exclude": ["node_modules"]
 }

@@ -21,7 +21,7 @@ export const authConfig = {
   session: {
     strategy: "jwt",
   },
-  debug: true,
+  debug: process.env.NODE_ENV === "development",
   logger: {
     error: console.error,
     warn: console.warn,
