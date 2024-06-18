@@ -1,6 +1,5 @@
 import { Availability, UserWithRelations } from "@/db/schema";
 import { UserAvailabilityDto, UserDto } from "@/db/data-access/dto/users/types";
-import { getImageFromBucket } from "@/db/s3";
 
 /**
  * Maps an array of UserWithRelations objects to an array of UserDto objects.
@@ -8,31 +7,19 @@ import { getImageFromBucket } from "@/db/s3";
  * @returns An array of UserDto objects.
  */
 export async function toUserDtoMapper(users: UserWithRelations[]): Promise<UserDto[]> {
-  return await Promise.all(
-    users.map(async user => {
-      return {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        displayName: user.displayName,
-        createdAt: user.createdAt,
-        aboutMe: user.aboutMe,
-        image: await processUserAvatarImage({ imageString: user.image || undefined }),
-        absences: [],
-        availabilities: toUserAvailabilityDtoMapper(user.availability || []),
-      } as UserDto;
-    })
-  );
-}
-
-export async function processUserAvatarImage({ imageString }: { imageString: string | undefined }) {
-  if (!imageString) return "";
-  if (imageString.startsWith("uaImg-")) {
-    const imageUrl = await getImageFromBucket({ key: imageString });
-    return imageUrl;
-  } else {
-    return imageString;
-  }
+  return users.map(user => {
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      displayName: user.displayName,
+      createdAt: user.createdAt,
+      aboutMe: user.aboutMe,
+      image: user.image,
+      absences: [],
+      availabilities: toUserAvailabilityDtoMapper(user.availability || []),
+    } as UserDto;
+  });
 }
 
 /**

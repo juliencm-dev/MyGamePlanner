@@ -1,36 +1,12 @@
 "use server";
 
 import { updateUserAvatar } from "@/db/data-access/users";
-import { addImageToBucket, S3AllowedContentTypes } from "@/db/s3";
-import { processImageFile } from "@/lib/img-processing";
 import { ServerResponseMessage } from "@/lib/types";
-import { createId } from "@paralleldrive/cuid2";
 
-export async function updateUserAvatarAction(formData: FormData): Promise<ServerResponseMessage> {
+export async function updateUserAvatarAction(url: string): Promise<ServerResponseMessage> {
   try {
-    const imgFile: File = formData.get("image") as File;
-    const fileContentType: string = imgFile.type;
-
-    if (!["image/jpeg", "image/png", "image/jpg", "image/gif"].includes(fileContentType)) {
-      return {
-        message: "Invalid image type",
-        status: 400,
-      };
-    }
-
-    const arrayBuffer = await imgFile.arrayBuffer();
-    const imgbuffer = Buffer.from(arrayBuffer);
-
-    const imageKey = `uaImg-${createId()}`;
-
-    await addImageToBucket({
-      key: imageKey,
-      image: imgbuffer,
-      contentType: fileContentType as S3AllowedContentTypes,
-    });
-
     await updateUserAvatar({
-      avatarKey: imageKey,
+      avatarKey: url,
     });
 
     return {

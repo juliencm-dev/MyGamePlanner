@@ -1,15 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { StarRating } from "@/components/groups/games/star-rating";
 import { useState, useTransition } from "react";
 import { PulseLoader } from "react-spinners";
@@ -24,78 +16,61 @@ export type SelectedGame = {
   image?: string;
 };
 
-export function RateGame({
-  children,
-  selectedGame,
-  userId,
-}: {
+type RateGameProps = {
   children: React.ReactNode;
   selectedGame: SelectedGame;
   userId: string;
-}) {
-  const [isPending, startTransition] = useTransition();
+};
+
+export function RateGame(props: RateGameProps) {
+  const [isLoading, setIsLoading] = useState(false);
   const [rating, setRating] = useState(0);
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmitRating = () => {
+  const handleSubmitRating = async () => {
     const newRating: RatingDto = {
-      gameId: selectedGame.id,
-      userId: userId,
+      gameId: props.selectedGame.id,
+      userId: props.userId,
       rating: rating,
     };
 
-    startTransition(async () => {
-      await addGameRatingAction(newRating).then((res) => {
-        if (res.status === 200) {
-          toast({
-            title: "Success",
-            description: res.message,
-          });
-        } else {
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description: res.message,
-          });
-        }
-      });
+    setIsLoading(true);
+
+    await addGameRatingAction(newRating).then(res => {
+      if (res.status === 200) {
+        toast({
+          title: "Success",
+          description: res.message,
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: res.message,
+        });
+      }
     });
+
+    setIsLoading(false);
   };
 
   return (
-    <Drawer
-      open={open}
-      onOpenChange={setOpen}>
-      <DrawerTrigger asChild>{children}</DrawerTrigger>
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>{props.children}</DrawerTrigger>
       <DrawerContent>
-        <div className='flex flex-col mx-auto w-full max-w-sm space-y-4'>
-          <DrawerHeader className='grid place-items-center'>
-            <DrawerTitle className='text-3xl'>Rate Game</DrawerTitle>
-            <DrawerDescription className='text-lg'>
-              {selectedGame.name}
-            </DrawerDescription>
+        <div className="flex flex-col mx-auto w-full max-w-sm space-y-4">
+          <DrawerHeader className="grid place-items-center">
+            <DrawerTitle className="text-3xl">Rate Game</DrawerTitle>
+            <DrawerDescription className="text-lg">{props.selectedGame.name}</DrawerDescription>
           </DrawerHeader>
-          {selectedGame.image && (
-            <Image
-              src={selectedGame.image}
-              width={200}
-              height={200}
-              alt={selectedGame.name}
-              className='self-center rounded-lg'
-            />
-          )}
-          <div className='self-center'>
-            <StarRating
-              setRating={setRating}
-              rating={rating}
-            />
+          {props.selectedGame.image && <Image src={props.selectedGame.image} width={200} height={200} alt={props.selectedGame.name} className="self-center rounded-lg" />}
+          <div className="self-center">
+            <StarRating setRating={setRating} rating={rating} />
           </div>
           <DrawerFooter>
-            <Button
-              disabled={isPending}
-              onClick={handleSubmitRating}>
-              {isPending ? <PulseLoader size={4} /> : "Submit"}
+            <Button disabled={isLoading} onClick={handleSubmitRating}>
+              {isLoading ? <PulseLoader size={4} /> : "Submit"}
             </Button>
           </DrawerFooter>
         </div>

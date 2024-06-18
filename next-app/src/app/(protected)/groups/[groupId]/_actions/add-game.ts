@@ -1,34 +1,11 @@
 "use server";
 
 import { createGame, updateGameImage } from "@/db/data-access/games";
-import { S3AllowedContentTypes, addImageToBucket } from "@/db/s3";
-import { processImageFile } from "@/lib/img-processing";
 import { type ServerResponseMessage } from "@/lib/types";
 import { type GameDto } from "@/db/data-access/dto/games/types";
 import { revalidatePath } from "next/cache";
 
-export async function addGameAction(
-  formData: FormData
-): Promise<ServerResponseMessage> {
-  const imgFile: File = formData.get("image") as File;
-  const fileContentType: string = imgFile.type;
-
-  if (
-    !["image/jpeg", "image/png", "image/jpg", "image/gif"].includes(
-      fileContentType
-    )
-  ) {
-    return {
-      message: "Invalid image type",
-      status: 400,
-    };
-  }
-
-  const imgBuffer = await processImageFile({
-    file: imgFile,
-    height: 200,
-  });
-
+export async function addGameAction(formData: FormData): Promise<ServerResponseMessage> {
   const newGame = {
     name: formData.get("name") as string,
     groupId: formData.get("groupId") as string,
@@ -36,6 +13,7 @@ export async function addGameAction(
     description: formData.get("description") as string,
     minPlayers: Number(formData.get("minPlayers")),
     maxPlayers: Number(formData.get("maxPlayers")),
+    image: formData.get("image") as string,
   } as GameDto;
 
   try {
@@ -47,14 +25,6 @@ export async function addGameAction(
         status: 500,
       };
     }
-
-    await addImageToBucket({
-      key: game.id,
-      image: imgBuffer,
-      contentType: fileContentType as S3AllowedContentTypes,
-    });
-
-    await updateGameImage({ gameId: game.id, imageUrl: game.id });
 
     revalidatePath(`/groups/${game.groupId}`);
 

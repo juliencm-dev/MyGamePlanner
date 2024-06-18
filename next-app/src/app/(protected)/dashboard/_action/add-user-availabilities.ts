@@ -5,11 +5,7 @@ import { type UserAvailabilityDto } from "@/db/data-access/dto/users/types";
 import { createUserAvailabilities } from "@/db/data-access/users";
 import { revalidatePath } from "next/cache";
 
-export async function addUserAvailabilitiesAction({
-  availabilities,
-}: {
-  availabilities: UserAvailabilityDto[];
-}): Promise<ServerResponseMessage> {
+export async function addUserAvailabilitiesAction({ availabilities }: { availabilities: UserAvailabilityDto[] }): Promise<ServerResponseMessage> {
   try {
     await createUserAvailabilities(availabilities);
 

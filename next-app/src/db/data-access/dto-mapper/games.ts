@@ -2,7 +2,7 @@ import { type Game, type GameRating } from "@/db/schema";
 import { type GameDto, type RatingDto } from "@/db/data-access/dto/games/types";
 
 export function toGameDtoMapper(games: Game[]): GameDto[] {
-  return games.map((game) => {
+  return games.map(game => {
     return {
       id: game.id,
       name: game.name,
@@ -30,7 +30,7 @@ export function toGameMapper(game: GameDto): Game {
 }
 
 export function toGameRatingDtoMapper(ratings: GameRating[]): RatingDto[] {
-  return ratings.map((rating) => {
+  return ratings.map(rating => {
     return {
       gameId: rating.gameId,
       userId: rating.userId,
