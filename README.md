@@ -82,14 +82,10 @@ We welcome contributions to MyGamePlannerq! To get started, follow these steps:
     ```
 5. Create a pull request.
 
-## License
+## Disclaimer
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project intentionally does not include a license. All rights reserved. You are welcome to view and study the code, but this repository does not grant you any rights to use, modify, distribute, or sublicense its contents.
 
-## Acknowledgments
-
-- Special thanks to the Next.js, React, and Tailwind CSS communities for their amazing tools and resources.
-- Thanks to all the contributors who have helped improve this project.
 
 ## Contact
 
