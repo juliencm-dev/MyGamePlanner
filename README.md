@@ -2,8 +2,6 @@
 
 MyGamePlanner is an application designed to facilitate the management, creation, and sharing of gaming sessions for groups. Built with Next.js, this application aims to make it easy for users to organize and plan their gaming activities efficiently.
 
-https://wwww.mygameplanner.xyz
-
 ## Features
 
 - **Create and Manage Sessions**: Easily create and manage gaming sessions.
